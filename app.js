@@ -19,7 +19,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('trust proxy', 1);
 
 // ---- static folders ----
-app.use('/assets', express.static(path.join(__dirname, 'public', 'assets'+version)));
+app.use('/assets', express.static(path.join(__dirname, 'public', 'assets'+appVersion)));
 app.use('/media', express.static(path.join(__dirname, 'public', 'media')));
 app.use('/uploads', express.static(path.join(__dirname, 'public', 'uploads')));
 
@@ -83,9 +83,18 @@ app.use(async (req, res, next) => {
   next();
 });
 
-// ============================================================
-// PUBLIC ROUTES
-// ============================================================
+function requireAuth(req, res, next) {
+  if (!req.locals.user) {
+    return res.redirect('/login?next=' + encodeURIComponent(req.originalUrl));
+  }
+  next();
+}
+
+function requireAdmin(req, res, next) {
+  if (!req.locals.user) return res.redirect('/login?next=/dashboard');
+  if (!req.locals.user.isadmin) return res.status(403).render('403', { title: res.locals.t('err_forbidden'), extraCss: ['error.css'] });
+  next();
+}
 
 // enrich campaign rows with raised amounts and derived values
 async function enrichCampaigns(campaigns, language) {
@@ -118,6 +127,9 @@ async function maybeClose(campaign) {
   return campaign;
 }
 
+// ============================================================
+// PUBLIC ROUTES
+// ============================================================
 
 app.get('/', async (req, res, next) => {
   try {
@@ -148,99 +160,6 @@ app.get('/', async (req, res, next) => {
         raised: utils.money(totalRaised, res.locals.language)
       }
     });
-  } catch (e) { next(e); }
-});
-
-app.get('/campaigns', async (req, res, next) => {
-  try {
-    const filter = ['open', 'closed', 'urgent'].includes(req.query.f) ? req.query.f : 'all';
-    let campaigns = await db.listCampaigns(filter, null);
-    campaigns = await enrichCampaigns(campaigns, res.locals.language);
-    res.render('campaigns', {
-      title: res.locals.t('list_title'),
-      extraCss: ['campaigns.css'],
-      filter,
-      campaigns
-    });
-  } catch (e) { next(e); }
-});
-
-app.get('/campaign/:id', async (req, res, next) => {
-  try {
-    const id = parseInt(req.params.id, 10);
-    if (!id){ return res.status(404).render('404', { title: res.locals.t('err_404_title'), extraCss: ['error.css'] }); }
-    let campaign = await db.findCampaignByControl(id);
-    if (!campaign){ return res.status(404).render('404', { title: res.locals.t('err_404_title'), extraCss: ['error.css'] }); }
-    campaign = await maybeClose(campaign);
-
-    const [images, donations, progress, raised] = await Promise.all([
-      db.listCampaignImages(campaign.id),
-      db.listDonationsByCampaign(campaign.id),
-      db.listProgress(campaign.id),
-      db.raisedByCampaign(campaign.id)
-    ]);
-    campaign.raised = raised;
-    campaign.raisedmoney = utils.money(raised, res.locals.language);
-    campaign.goalmoney = utils.money(campaign.goalamount, res.locals.language);
-    campaign.percent = campaign.goalamount > 0 ? Math.min(100, Math.round((raised / campaign.goalamount) * 100)) : 0;
-    campaign.daysleft = utils.daysLeft(campaign.enddate);
-    campaign.createdate = utils.fmtDate(campaign.created, res.locals.language);
-    campaign.enddatefmt = utils.fmtDate(campaign.enddate, res.locals.language);
-    campaign.isclosed = campaign.status === 1;
-    campaign.iscancelled = campaign.status === 2;
-    campaign.isinvalid = campaign.status === 4;
-
-    const confirmed = donations.filter((d) => d.status === 1);
-    const isOwner = res.locals.user && res.locals.user.userid === campaign.userid;
-
-    res.render('campaign', {
-      title: campaign.title,
-      extraCss: ['campaign.css'],
-      extraScripts: ['campaign.js'],
-      campaign,
-      images,
-      donations: confirmed,
-      progress,
-      isOwner,
-      donated: req.query.donated === '1',
-      created: req.query.created === '1',
-      progressed: req.query.progressed === '1'
-    });
-  } catch (e) { next(e); }
-});
-
-app.post('/campaign/:id/donate', async (req, res, next) => {
-  try {
-    const id = parseInt(req.params.id, 10);
-    const user = req.locals.user;
-    if (!user) return res.redirect('/login?next=/campaign/' + id);
-    const campaign = await db.findCampaignById(id);
-    if (!campaign) return res.status(404).render('404', { title: res.locals.t('err_404_title'), extraCss: ['error.css'] });
-    await maybeClose(campaign);
-    if (campaign.status !== 0) {
-      return res.redirect('/campaign/' + id + '?err=campaign_closed');
-    }
-    if (campaign.userid === user.userid) {
-      return res.redirect('/campaign/' + id + '?err=campaign_own');
-    }
-    const amount = parseFloat(req.body.amount);
-    const bankname = String(req.body.bankname || '').trim();
-    const confirmation = String(req.body.confirmation || '').trim();
-    const donorname = String(req.body.donorname || '').trim();
-    const anonymous = req.body.anonymous === '1' || !donorname;
-    if (!amount || amount <= 0) return res.redirect('/campaign/' + id + '?err=amount');
-    if (!bankname || !confirmation) return res.redirect('/campaign/' + id + '?err=bad_request');
-    await db.createDonation({
-      campaignid: id,
-      userid: user.userid,
-      amount,
-      bankname,
-      confirmation,
-      donorname: anonymous ? '' : donorname,
-      anonymous: anonymous ? 1 : 0
-    });
-    await db.touch(id);
-    res.redirect('/campaign/' + id + '?donated=1');
   } catch (e) { next(e); }
 });
 
@@ -416,22 +335,105 @@ app.get('/lang/:code', (req, res) => {
   res.redirect(back.startsWith('/') && !back.startsWith('//') ? back : '/');
 });
 
+
 // ============================================================
 // FUNDRAISER ROUTES
 // ============================================================
 
-function requireAuth(req, res, next) {
-  if (!req.locals.user) {
-    return res.redirect('/login?next=' + encodeURIComponent(req.originalUrl));
-  }
-  next();
-}
+app.get('/campaigns', async (req, res, next) => {
+  try {
+    const filter = ['open', 'closed', 'urgent'].includes(req.query.f) ? req.query.f : 'all';
+    let campaigns = await db.listCampaigns(filter, null);
+    campaigns = await enrichCampaigns(campaigns, res.locals.language);
+    res.render('campaigns', {
+      title: res.locals.t('list_title'),
+      extraCss: ['campaigns.css'],
+      filter,
+      campaigns
+    });
+  } catch (e) { next(e); }
+});
 
-function requireAdmin(req, res, next) {
-  if (!req.locals.user) return res.redirect('/login?next=/dashboard');
-  if (!req.locals.user.isadmin) return res.status(403).render('403', { title: res.locals.t('err_forbidden'), extraCss: ['error.css'] });
-  next();
-}
+app.get('/campaign/:control', async (req, res, next) => {
+  try {
+    const control = req.params.control;
+    if (!control){ return res.status(404).render('404', { title: res.locals.t('err_404_title'), extraCss: ['error.css'] }); }
+    let campaign = await db.findCampaignByControl(control);
+    if (!campaign){ return res.status(404).render('404', { title: res.locals.t('err_404_title'), extraCss: ['error.css'] }); }
+    const id = campaign.id
+    campaign = await maybeClose(campaign);
+
+    const [images, donations, progress, raised] = await Promise.all([
+      db.listCampaignImages(campaign.id),
+      db.listDonationsByCampaign(campaign.id),
+      db.listProgress(campaign.id),
+      db.raisedByCampaign(campaign.id)
+    ]);
+    campaign.raised = raised;
+    campaign.raisedmoney = utils.money(raised, res.locals.language);
+    campaign.goalmoney = utils.money(campaign.goalamount, res.locals.language);
+    campaign.percent = campaign.goalamount > 0 ? Math.min(100, Math.round((raised / campaign.goalamount) * 100)) : 0;
+    campaign.daysleft = utils.daysLeft(campaign.enddate);
+    campaign.createdate = utils.fmtDate(campaign.created, res.locals.language);
+    campaign.enddatefmt = utils.fmtDate(campaign.enddate, res.locals.language);
+    campaign.isclosed = campaign.status === 1;
+    campaign.iscancelled = campaign.status === 2;
+    campaign.isinvalid = campaign.status === 4;
+
+    const confirmed = donations.filter((d) => d.status === 1);
+    const isOwner = res.locals.user && res.locals.user.userid === campaign.userid;
+
+    res.render('campaign', {
+      title: campaign.title,
+      extraCss: ['campaign.css'],
+      extraScripts: ['campaign.js'],
+      campaign,
+      images,
+      donations: confirmed,
+      progress,
+      isOwner,
+      donated: req.query.donated === '1',
+      created: req.query.created === '1',
+      progressed: req.query.progressed === '1'
+    });
+  } catch (e) { next(e); }
+});
+
+app.post('/campaign/:control/donate', async (req, res, next) => {
+  try {
+    const control = req.params.control
+    const user = req.locals.user;
+    if (!user) return res.redirect('/login?next=/campaign/' + id);
+    const campaign = await db.findCampaignByControl(control);
+    if (!campaign) return res.status(404).render('404', { title: res.locals.t('err_404_title'), extraCss: ['error.css'] });
+    const id = campaign.id
+    await maybeClose(campaign);
+    if (campaign.status !== 0) {
+      return res.redirect('/campaign/' + control + '?err=campaign_closed');
+    }
+    if (campaign.userid === user.userid) {
+      return res.redirect('/campaign/' + control + '?err=campaign_own');
+    }
+    const amount = parseFloat(req.body.amount);
+    const bankname = String(req.body.bankname || '').trim();
+    const confirmation = String(req.body.confirmation || '').trim();
+    const donorname = String(req.body.donorname || '').trim();
+    const anonymous = req.body.anonymous === 'true' || !donorname;
+    if (!amount || amount <= 0) return res.redirect('/campaign/' + control + '?err=amount');
+    if (!bankname || !confirmation) return res.redirect('/campaign/' + control + '?err=bad_request');
+    await db.createDonation({
+      campaignid: id,
+      userid: user.userid,
+      amount,
+      bankname,
+      confirmation,
+      donorname: anonymous ? '' : donorname,
+      anonymous: anonymous
+    });
+    await db.touch(id);
+    res.redirect('/campaign/' + control + '?donated=1');
+  } catch (e) { next(e); }
+});
 
 app.get('/create', requireAuth, (req, res) => {
   const control = utils.randomNumber()
@@ -553,23 +555,23 @@ app.get('/mycampaigns', requireAuth, async (req, res, next) => {
   } catch (e) { next(e); }
 });
 
-app.post('/campaign/:id/close', requireAuth, async (req, res, next) => {
+app.post('/campaign/:control/close', requireAuth, async (req, res, next) => {
   try {
-    const id = parseInt(req.params.id, 10);
-    const campaign = await db.findCampaignById(id);
+    const control = req.params.control
+    const campaign = await db.findCampaignByControl(control);
     if (!campaign) return res.status(404).render('404', { title: res.locals.t('err_404_title'), extraCss: ['error.css'] });
     if (campaign.userid !== req.locals.user.userid && !req.locals.user.isadmin) {
       return res.status(403).render('403', { title: res.locals.t('err_forbidden'), extraCss: ['error.css'] });
     }
-    await db.updateStatus(id, 1);
+    await db.updateStatus(campaign.id, 1);
     res.redirect('/mycampaigns');
   } catch (e) { next(e); }
 });
 
-app.get('/campaign/:id/progress', requireAuth, async (req, res, next) => {
+app.get('/campaign/:control/progress', requireAuth, async (req, res, next) => {
   try {
-    const id = parseInt(req.params.id, 10);
-    const campaign = await db.findCampaignById(id);
+    const control = req.params.control
+    const campaign = await db.findCampaignByControl(control);
     if (!campaign) return res.status(404).render('404', { title: res.locals.t('err_404_title'), extraCss: ['error.css'] });
     if (campaign.userid !== req.locals.user.userid && !req.locals.user.isadmin) {
       return res.status(403).render('403', { title: res.locals.t('err_forbidden'), extraCss: ['error.css'] });
@@ -584,20 +586,20 @@ app.get('/campaign/:id/progress', requireAuth, async (req, res, next) => {
   } catch (e) { next(e); }
 });
 
-app.post('/campaign/:id/progress', requireAuth, async (req, res, next) => {
+app.post('/campaign/:control/progress', requireAuth, async (req, res, next) => {
   try {
-    const id = parseInt(req.params.id, 10);
+    const control = req.params.control
     const campaign = await db.findCampaignById(id);
     if (!campaign) return res.status(404).render('404', { title: res.locals.t('err_404_title'), extraCss: ['error.css'] });
     if (campaign.userid !== req.locals.user.userid && !req.locals.user.isadmin) {
       return res.status(403).render('403', { title: res.locals.t('err_forbidden'), extraCss: ['error.css'] });
     }
+    const id = campaign.id;
     const title = String(req.body.title || '').trim();
     const text = String(req.body.text || '').trim();
     if (!title || !text) {
       return res.render('progress', { title: res.locals.t('prog_title'), extraCss: ['create.css'], extraScripts: ['create.js'], campaign, err: 'auth_required' });
     }
-    const control = campaign.control
     const post = await db.createProgress({ campaignid: id, title, text });
     const files = utils.toArray(req.files && req.files.images);
     try {
@@ -618,12 +620,12 @@ app.post('/campaign/:id/progress', requireAuth, async (req, res, next) => {
   } catch (e) { next(e); }
 });
 
-app.post('/campaign/:id/donation/:did/status', requireAuth, async (req, res, next) => {
+app.post('/campaign/:control/donation/:did/status', requireAuth, async (req, res, next) => {
   try {
-    const id = parseInt(req.params.id, 10);
+    const control = req.params.control
     const did = parseInt(req.params.did, 10);
     const status = parseInt(req.body.status, 10);
-    const campaign = await db.findCampaignById(id);
+    const campaign = await db.findCampaignByControl(control);
     if (!campaign) return res.status(404).render('404', { title: res.locals.t('err_404_title'), extraCss: ['error.css'] });
     if (campaign.userid !== req.locals.user.userid && !req.locals.user.isadmin) {
       return res.status(403).render('403', { title: res.locals.t('err_forbidden'), extraCss: ['error.css'] });

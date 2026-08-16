@@ -18,7 +18,7 @@
         <article class="manage-card">
           <div class="manage-head">
             <div class="manage-title">
-              <h2><a href="/campaign/<%= c.id %>"><%= c.title %></a></h2>
+              <h2><a href="/campaign/<%= c.control %>"><%= c.title %></a></h2>
               <div class="campaign-badges">
                 <% if (c.status === 0) { %><span class="badge badge-open"><%= t('c_status_open') %></span><% } %>
                 <% if (c.status === 1) { %><span class="badge badge-closed"><%= t('c_status_closed') %></span><% } %>
@@ -28,14 +28,14 @@
               </div>
             </div>
             <div class="manage-actions">
-              <a href="/campaign/<%= c.id %>" class="btn btn-ghost btn-sm"><%= t('view') %></a>
+              <a href="/campaign/<%= c.control %>" class="btn btn-ghost btn-sm"><%= t('view') %></a>
               <% if (c.status === 0) { %>
-                <form action="/campaign/<%= c.id %>/close" method="post" onsubmit="return confirm('<%= t('my_close_confirm') %>')">
+                <form action="/campaign/<%= c.control %>/close" method="post" onsubmit="return confirm('<%= t('my_close_confirm') %>')">
                   <button type="submit" class="btn btn-outline btn-sm"><%= t('my_close') %></button>
                 </form>
               <% } %>
               <% if (c.status === 1) { %>
-                <a href="/campaign/<%= c.id %>/progress" class="btn btn-outline btn-sm"><%= t('my_addprogress') %></a>
+                <a href="/campaign/<%= c.control %>/progress" class="btn btn-outline btn-sm"><%= t('my_addprogress') %></a>
               <% } %>
             </div>
           </div>
@@ -79,11 +79,11 @@
                       </td>
                       <td class="table-actions">
                         <% if (d.status === 0) { %>
-                          <form action="/campaign/<%= c.id %>/donation/<%= d.id %>/status" method="post">
+                          <form action="/campaign/<%= c.control %>/donation/<%= d.id %>/status" method="post">
                             <input type="hidden" name="status" value="1">
                             <button type="submit" class="btn btn-ghost btn-xs"><%= t('my_confirm') %></button>
                           </form>
-                          <form action="/campaign/<%= c.id %>/donation/<%= d.id %>/status" method="post">
+                          <form action="/campaign/<%= c.control %>/donation/<%= d.id %>/status" method="post">
                             <input type="hidden" name="status" value="2">
                             <button type="submit" class="btn btn-ghost btn-xs danger"><%= t('my_cancel') %></button>
                           </form>
