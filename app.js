@@ -19,7 +19,8 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('trust proxy', 1);
 
 // ---- static folders ----
-app.use('/assets', express.static(path.join(__dirname, 'public', 'assets'+appVersion)));
+//app.use('/assets', express.static(path.join(__dirname, 'public', 'assets'+appVersion)));
+app.use('/assets', express.static(path.join(__dirname, 'public', 'assets')));
 app.use('/media', express.static(path.join(__dirname, 'public', 'media')));
 app.use('/uploads', express.static(path.join(__dirname, 'public', 'uploads')));
 
