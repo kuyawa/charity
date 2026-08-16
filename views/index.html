@@ -1,0 +1,136 @@
+<%- include('header.html') %>
+
+<section class="hero">
+  <div class="container hero-media">
+    <div class="hero-copy">
+      <h1 class="hero-title"><%= t('hero_title') %></h1>
+    </div>
+  </div>
+</section>
+<section class="info">
+  <div class="container hero-info">
+    <span class="hero-eyebrow"><%= t('tagline') %></span>
+    <p class="hero-subtitle"><%= t('hero_subtitle') %></p>
+    <div class="hero-actions">
+      <a href="/create" class="btn btn-primary btn-lg"><%= t('hero_cta') %></a>
+      <a href="/campaigns" class="btn btn-outline btn-lg"><%= t('hero_cta2') %></a>
+    </div>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <span class="hero-stat-value"><%= stats.campaigns %></span>
+        <span class="hero-stat-label"><%= t('hero_stats_campaigns') %></span>
+      </div>
+      <div class="hero-stat">
+        <span class="hero-stat-value"><%= stats.donors %></span>
+        <span class="hero-stat-label"><%= t('hero_stats_donors') %></span>
+      </div>
+      <div class="hero-stat">
+        <span class="hero-stat-value"><%= stats.raised %></span>
+        <span class="hero-stat-label"><%= t('hero_stats_raised') %></span>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- 
+    <div class="hero-art" aria-hidden="true">
+      <svg viewBox="0 0 320 320" width="320" height="320">
+        <defs>
+          <linearGradient id="heroGrad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#e8564a"/>
+            <stop offset="100%" stop-color="#c33a2e"/>
+          </linearGradient>
+        </defs>
+        <circle cx="160" cy="160" r="150" fill="url(#heroGrad)" opacity="0.14"/>
+        <circle cx="160" cy="160" r="112" fill="none" stroke="url(#heroGrad)" stroke-width="2" stroke-dasharray="6 10"/>
+        <path d="M160 232s-58-36-77-72c-12-23 2-52 31-52 15 0 27 8 34 19h24c7-11 19-19 34-19 29 0 43 29 31 52-19 36-77 72-77 72z" fill="url(#heroGrad)"/>
+        <g fill="#ffffff">
+          <circle cx="160" cy="205" r="26" opacity="0.92"/>
+          <path d="M160 224s-20-12.5-26.5-25c-4.2-8 0.8-18 10.7-18 5.2 0 9.4 2.8 11.8 6.6h8c2.4-3.8 6.6-6.6 11.8-6.6 9.9 0 14.9 10 10.7 18-6.5 12.5-26.5 25-26.5 25z" fill="#e8564a"/>
+        </g>
+      </svg>
+    </div>
+ -->
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="section-head">
+      <div>
+        <h2 class="section-title"><%= t('sec_urgent') %></h2>
+        <p class="section-sub"><%= t('sec_urgent_sub') %></p>
+      </div>
+      <a href="/campaigns?f=urgent" class="btn btn-ghost"><%= t('card_viewall') %></a>
+    </div>
+    <div class="cards-grid cards-urgent">
+      <% if (urgent && urgent.length) { urgent.forEach(function (c) { %>
+        <%- include('card.html', { campaign: c }) %>
+      <% }); } else { %>
+        <p class="empty-note"><%= t('empty_none') %></p>
+      <% } %>
+    </div>
+  </div>
+</section>
+
+<section class="section section-alt">
+  <div class="container">
+    <div class="section-head">
+      <div>
+        <h2 class="section-title"><%= t('sec_recent') %></h2>
+        <p class="section-sub"><%= t('sec_recent_sub') %></p>
+      </div>
+      <a href="/campaigns?f=open" class="btn btn-ghost"><%= t('card_viewall') %></a>
+    </div>
+    <div class="cards-grid">
+      <% if (recentOpen && recentOpen.length) { recentOpen.forEach(function (c) { %>
+        <%- include('card.html', { campaign: c }) %>
+      <% }); } else { %>
+        <p class="empty-note"><%= t('empty_none') %></p>
+      <% } %>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="section-head">
+      <div>
+        <h2 class="section-title"><%= t('sec_closed') %></h2>
+        <p class="section-sub"><%= t('sec_closed_sub') %></p>
+      </div>
+      <a href="/campaigns?f=closed" class="btn btn-ghost"><%= t('card_viewall') %></a>
+    </div>
+    <div class="cards-grid">
+      <% if (recentClosed && recentClosed.length) { recentClosed.forEach(function (c) { %>
+        <%- include('card.html', { campaign: c }) %>
+      <% }); } else { %>
+        <p class="empty-note"><%= t('empty_none') %></p>
+      <% } %>
+    </div>
+  </div>
+</section>
+
+<section class="section section-how">
+  <div class="container">
+    <h2 class="section-title center"><%= t('how_title') %></h2>
+    <div class="how-grid">
+      <div class="how-step">
+        <span class="how-num">1</span>
+        <h3><%= t('how_step1_title') %></h3>
+        <p><%= t('how_step1_text') %></p>
+      </div>
+      <div class="how-step">
+        <span class="how-num">2</span>
+        <h3><%= t('how_step2_title') %></h3>
+        <p><%= t('how_step2_text') %></p>
+      </div>
+      <div class="how-step">
+        <span class="how-num">3</span>
+        <h3><%= t('how_step3_title') %></h3>
+        <p><%= t('how_step3_text') %></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<%- include('footer.html') %>

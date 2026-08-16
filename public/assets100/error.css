@@ -1,0 +1,22 @@
+/* error pages */
+
+.error-section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 90px 22px;
+  text-align: center;
+}
+.error-code {
+  display: block;
+  font-size: 5.5rem;
+  font-weight: 800;
+  letter-spacing: -0.05em;
+  line-height: 1;
+  background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.error-title { font-size: 1.5rem; margin: 14px 0 8px; }
+.error-text { color: var(--muted); margin-bottom: 26px; }

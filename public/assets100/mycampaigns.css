@@ -1,0 +1,55 @@
+/* my campaigns */
+
+.manage-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+  margin-bottom: 22px;
+  box-shadow: var(--shadow-sm);
+}
+
+.manage-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 18px;
+  flex-wrap: wrap;
+}
+.manage-title h2 { font-size: 1.25rem; letter-spacing: -0.02em; margin-bottom: 10px; }
+.manage-title h2 a { color: var(--text); }
+.manage-title h2 a:hover { color: var(--accent); }
+.manage-actions { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.manage-actions form { display: inline; }
+
+.manage-stats {
+  display: flex;
+  gap: 26px;
+  flex-wrap: wrap;
+  color: var(--muted);
+  font-size: 0.9rem;
+  margin: 18px 0 22px;
+  padding: 14px 16px;
+  background: var(--surface-2);
+  border-radius: var(--radius-sm);
+}
+.manage-stats strong { color: var(--text); }
+
+.manage-sub {
+  font-size: 0.82rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+  margin-bottom: 12px;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--muted);
+}
+.empty-state p { margin-bottom: 20px; }
+
+@media (max-width: 640px) {
+  .manage-head { flex-direction: column; }
+}

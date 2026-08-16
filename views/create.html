@@ -1,0 +1,92 @@
+<%- include('header.html') %>
+
+<section class="page-head">
+  <div class="container">
+    <h1 class="page-title"><%= t('create_title') %></h1>
+    <p class="page-sub"><%= t('create_subtitle') %></p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container container-narrow">
+    <% if (err) { %>
+      <div class="alert alert-error" role="alert"><%= t(err) %></div>
+    <% } %>
+
+    <div class="fee-box">
+      <div class="fee-icon" aria-hidden="true">
+        <big><b>$5</b></big>
+<!-- 
+        <svg viewBox="0 0 24 24" width="26" height="26">
+          <circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/>
+          <path d="M12 7v10M15 9.5c-.5-1-1.6-1.5-3-1.5-1.8 0-3 1-3 2.3 0 3.4 6 2 6 5.2 0 1.3-1.2 2.5-3 2.5-1.4 0-2.5-.5-3-1.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+ -->
+      </div>
+      <div>
+        <h3><%= t('create_fee_title') %></h3>
+        <p><%= t('create_fee_text') %></p>
+        <dl class="bank-list inline">
+          <div><dt><%= t('c_bank_name') %></dt><dd><%= bankName %></dd></div>
+          <div><dt><%= t('c_bank_account') %></dt><dd><%= bankAcct %></dd></div>
+          <div><dt><%= t('c_bank_holder') %></dt><dd><%= bankHolder %></dd></div>
+        </dl>
+      </div>
+    </div>
+
+    <form action="/create" method="post" enctype="multipart/form-data" class="card-form" id="createForm" novalidate>
+      <input type="hidden" name="control" id="control" value="<%=form.control%>">
+      <div class="field">
+        <label for="title"><%= t('create_c_title') %></label>
+        <input type="text" id="title" name="title" value="<%= form.title || '' %>" placeholder="<%= t('create_c_title_ph') %>" required>
+      </div>
+      <div class="field">
+        <label for="description"><%= t('create_c_desc') %></label>
+        <textarea id="description" name="description" rows="7" placeholder="<%= t('create_c_desc_ph') %>" required><%= form.description || '' %></textarea>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label for="goalamount"><%= t('create_c_goal') %></label>
+          <input type="number" id="goalamount" name="goalamount" min="1" step="0.01" value="<%= form.goalamount || '' %>" required>
+        </div>
+        <div class="field">
+          <label for="enddate"><%= t('create_c_end') %></label>
+          <input type="date" id="enddate" name="enddate" value="<%= form.enddate || new Date().toJSON().substr(0,10) %>" required>
+          <p class="field-hint"><%= t('create_c_end_note') %></p>
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label for="bankname"><%= t('create_c_bankname') %></label>
+          <input type="text" id="bankname" name="bankname" value="<%= form.bankname || '' %>" required>
+        </div>
+        <div class="field">
+          <label for="bankaccount"><%= t('create_c_bankaccount') %></label>
+          <input type="text" id="bankaccount" name="bankaccount" value="<%= form.bankaccount || '' %>" required>
+        </div>
+      </div>
+      <div class="field">
+        <label for="bankholder"><%= t('create_c_bankholder') %></label>
+        <input type="text" id="bankholder" name="bankholder" value="<%= form.bankholder || '' %>" required>
+      </div>
+      <div class="field">
+        <label for="images"><%= t('create_c_images') %></label>
+        <input type="file" id="images" name="images" accept=".jpg,.jpeg,.png,.webp,.gif" multiple>
+        <p class="field-hint" id="imagesHint" data-default="<%= t('create_c_images_note') %>"><%= t('create_c_images_note') %></p>
+        <div class="image-previews" id="imagePreviews"></div>
+      </div>
+      <div class="field">
+        <label for="confirm"><%= t('c_confnum_ph') %></label>
+        <input type="text" id="confirm" name="confirm" >
+      </div>
+
+      <label class="checkbox">
+        <input type="checkbox" name="fee" value="1" required>
+        <span><%= t('create_confirm_fee') %></span>
+      </label>
+      <button type="submit" class="btn btn-primary btn-lg btn-block"><%= t('create_c_submit') %></button>
+    </form>
+  </div>
+</section>
+
+<%- include('footer.html') %>

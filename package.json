@@ -1,0 +1,19 @@
+{
+  "name": "charity",
+  "version": "1.0.0",
+  "description": "Charity - a donation platform to create and support fundraising campaigns",
+  "main": "app.js",
+  "author": "kuyawa",
+  "license": "private",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "dependencies": {
+    "cookie-parser": "^1.4.7",
+    "ejs": "^6.0.1",
+    "express": "^5.2.1",
+    "express-fileupload": "^1.5.2",
+    "pg": "^8.23.0"
+  }
+}

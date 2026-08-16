@@ -1,0 +1,211 @@
+<%- include('header.html') %>
+
+<div class="container">
+  <a href="/campaigns" class="back-link">
+    <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
+      <path d="M15 18l-6-6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    <%= t('back') %>
+  </a>
+
+  <% if (donated) { %>
+    <div class="alert alert-success" role="status"><strong><%= t('don_thanks') %>.</strong> <%= t('don_success') %></div>
+  <% } %>
+  <% if (created) { %>
+    <div class="alert alert-success" role="status"><strong><%= t('create_success') %></strong></div>
+  <% } %>
+  <% if (progressed) { %>
+    <div class="alert alert-success" role="status"><strong><%= t('prog_success') %></strong></div>
+  <% } %>
+  <% if (query.err) { %>
+    <div class="alert alert-error" role="alert"><%= t('err_' + query.err) || t('err_server') %></div>
+  <% } %>
+</div>
+
+<section class="section section-top">
+  <div class="container">
+    <div class="campaign-head">
+      <div class="campaign-badges">
+        <% if (campaign.status === 0) { %><span class="badge badge-open"><%= t('c_status_open') %></span><% } %>
+        <% if (campaign.status === 1) { %><span class="badge badge-closed"><%= t('c_status_closed') %></span><% } %>
+        <% if (campaign.status === 2) { %><span class="badge badge-cancelled"><%= t('c_status_cancelled') %></span><% } %>
+        <% if (campaign.status === 3) { %><span class="badge badge-refunded"><%= t('c_status_refunded') %></span><% } %>
+        <% if (campaign.status === 4) { %><span class="badge badge-invalid"><%= t('c_status_invalid') %></span><% } %>
+        <% if (campaign.urgent === 1) { %><span class="badge badge-urgent"><%= t('card_urgent') %></span><% } %>
+      </div>
+      <h1 class="campaign-title"><%= campaign.title %></h1>
+      <div class="campaign-meta">
+        <span class="avatar avatar-sm"><%= String(campaign.ownername).charAt(0).toUpperCase() %></span>
+        <span><%= t('c_organizer') %>: <strong><%= campaign.ownername %></strong></span>
+        <!-- <span class="dot-sep" aria-hidden="true"></span> -->
+        <span  aria-hidden="true">•</span>
+        <span><%= getCountry(campaign.ownercountry) %></span>
+      </div>
+    </div>
+
+    <div class="campaign-layout">
+      <div class="campaign-main">
+        <% if (images && images.length) { %>
+          <div class="gallery">
+            <div class="gallery-main">
+              <img id="galleryMain" src="/uploads/campaigns/<%= campaign.coverimg %>" alt="<%= campaign.title %>">
+            </div>
+            <% if (images.length > 1) { %>
+              <div class="gallery-thumbs">
+                <% images.forEach(function (img, i) { %>
+                  <button type="button" class="gallery-thumb <%= i === 0 ? 'active' : '' %>" data-img="/uploads/campaigns/<%= img.image %>" aria-label="<%= t('c_images') %>">
+                    <img src="/uploads/campaigns/<%= img.image %>" alt="" loading="lazy">
+                  </button>
+                <% }); %>
+              </div>
+            <% } %>
+          </div>
+        <% } else { %>
+          <div class="gallery gallery-fallback">
+            <svg viewBox="0 0 24 24" width="72" height="72" aria-hidden="true">
+              <path d="M12 21s-7.5-4.7-10-9.3C.4 8.6 2.4 5 5.8 5c2 0 3.4 1.1 4.2 2.5h4c.8-1.4 2.2-2.5 4.2-2.5 3.4 0 5.4 3.6 3.8 6.7C19.5 16.3 12 21 12 21z" fill="currentColor"/>
+            </svg>
+          </div>
+        <% } %>
+
+        <div class="campaign-section">
+          <h2 class="campaign-section-title"><%= t('create_c_desc') %></h2>
+          <div class="campaign-description"><%= campaign.description %></div>
+        </div>
+
+        <div class="campaign-section">
+          <h2 class="campaign-section-title"><%= t('c_progress_title') %></h2>
+          <% if (campaign.status === 1 && isOwner) { %>
+            <a href="/campaign/<%= campaign.id %>/progress" class="btn btn-primary btn-sm"><%= t('c_postprogress') %></a>
+          <% } %>
+          <% if (progress && progress.length) { %>
+            <% progress.forEach(function (p) { %>
+              <article class="progress-post">
+                <div class="progress-post-head">
+                  <h3><%= p.title %></h3>
+                  <span class="progress-post-date"><%= fmtDate(p.created) %></span>
+                </div>
+                <p class="progress-post-text"><%= p.description %></p>
+                <% if (p.images && p.images.length) { %>
+                  <div class="progress-images">
+                    <% p.images.forEach(function (img) { %>
+                      <img src="/uploads/<%= img.image %>" alt="" loading="lazy">
+                    <% }); %>
+                  </div>
+                <% } %>
+              </article>
+            <% }); %>
+          <% } else { %>
+            <p class="empty-note"><%= t('c_progress_empty') %></p>
+          <% } %>
+        </div>
+
+        <div class="campaign-section">
+          <h2 class="campaign-section-title"><%= t('c_donations_title') %></h2>
+          <% if (donations && donations.length) { %>
+            <ul class="donation-list">
+              <% donations.forEach(function (d) { %>
+                <li class="donation-row">
+                  <span class="donation-avatar"><%= d.anonymous === 1 || !d.donorname ? '?' : String(d.donorname).charAt(0).toUpperCase() %></span>
+                  <span class="donation-name"><%= d.anonymous === 1 || !d.donorname ? t('c_anonymous') : d.donorname %></span>
+                  <span class="donation-date"><%= fmtDate(d.created) %></span>
+                  <span class="donation-amount"><%= money(d.amount) %></span>
+                </li>
+              <% }); %>
+            </ul>
+          <% } else { %>
+            <p class="empty-note"><%= t('c_donations_empty') %></p>
+          <% } %>
+        </div>
+      </div>
+
+      <aside class="campaign-side">
+        <div class="side-card">
+          <div class="side-info">
+            <span><%= t('c_created') %> <%= campaign.createdate %></span>
+          </div>
+          <div class="side-raised">
+            <span class="side-raised-value"><%= campaign.raisedmoney %></span>
+            <span class="side-raised-label"><%= t('c_raised') %> de <%= campaign.goalmoney %></span>
+          </div>
+          <div class="progress-track track-lg"><span class="progress-fill" style="width:<%= campaign.percent %>%"></span></div>
+          <div class="side-meta">
+            <% if (campaign.status === 0) { %>
+              <span><strong><%= campaign.daysleft %></strong> <%= t('c_daysleft') %></span>
+              <span><%= fmtDate(campaign.enddate) %></span>
+            <% } else { %>
+              <span><%= t('c_ended') %>: <%= campaign.enddatefmt %></span>
+            <% } %>
+          </div>
+
+          <% if (campaign.status === 0) { %>
+            <% if (typeof user !== 'undefined' && user) { %>
+              <% if (isOwner) { %>
+                <p class="side-note"><%= t('err_campaign_own') %></p>
+              <% } else { %>
+                <button type="button" class="btn btn-primary btn-lg btn-block" id="donateToggle"><%= t('c_donate') %></button>
+              <% } %>
+            <% } else { %>
+              <a href="/login?next=/campaign/<%= campaign.id %>" class="btn btn-primary btn-lg btn-block"><%= t('c_login_to_donate') %></a>
+            <% } %>
+          <% } else if (campaign.status === 1) { %>
+            <p class="side-note"><%= t('c_closed_note') %></p>
+          <% } else if (campaign.status === 2) { %>
+            <p class="side-note"><%= t('c_cancelled_note') %></p>
+          <% } else if (campaign.status === 4) { %>
+            <p class="side-note"><%= t('c_invalid_note') %></p>
+          <% } %>
+
+          <button type="button" class="btn btn-outline btn-block share-btn" id="shareBtn">
+            <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
+              <path d="M4 12v7a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-7M16 6l-4-4-4 4M12 2v13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <%= t('c_share') %>
+          </button>
+        </div>
+
+        <% if (campaign.status === 0) { %>
+          <div class="side-card donate-form-card" id="donateForm" hidden>
+            <h3 class="side-card-title"><%= t('c_donate_title') %></h3>
+            <p class="side-note"><%= t('c_donate_info') %></p>
+            <form action="/campaign/<%= campaign.control %>/donate" method="post" novalidate>
+              <div class="field">
+                <label for="amount"><%= t('c_amount') %></label>
+                <input type="number" id="amount" name="amount" min="0.01" step="0.01" required>
+              </div>
+              <div class="field">
+                <label for="bankname"><%= t('c_bankname') %></label>
+                <input type="text" id="bankname" name="bankname" placeholder="<%= t('c_bankname_ph') %>" required>
+              </div>
+              <div class="field">
+                <label for="confirmation"><%= t('c_confnum') %></label>
+                <input type="text" id="confirmation" name="confirmation" placeholder="<%= t('c_confnum_ph') %>" required>
+              </div>
+              <div class="field">
+                <label for="donorname"><%= t('c_yourname') %></label>
+                <input type="text" id="donorname" name="donorname" placeholder="<%= t('c_yourname_ph') %>">
+              </div>
+              <label class="checkbox">
+                <input type="checkbox" name="anonymous" value="1">
+                <span><%= t('c_anon_note') %></span>
+              </label>
+              <button type="submit" class="btn btn-primary btn-block"><%= t('c_submit_donation') %></button>
+            </form>
+          </div>
+        <% } %>
+
+        <div class="side-card">
+          <h3 class="side-card-title"><%= t('c_bank_title') %></h3>
+          <p class="side-note"><%= t('c_bank_note') %></p>
+          <dl class="bank-list">
+            <div><dt><%= t('c_bank_name') %></dt><dd><%= campaign.bankname || '—' %></dd></div>
+            <div><dt><%= t('c_bank_account') %></dt><dd><%= campaign.bankaccount || '—' %></dd></div>
+            <div><dt><%= t('c_bank_holder') %></dt><dd><%= campaign.bankholder || '—' %></dd></div>
+          </dl>
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<%- include('footer.html') %>

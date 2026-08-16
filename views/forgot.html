@@ -1,0 +1,28 @@
+<%- include('header.html') %>
+
+<section class="auth-section">
+  <div class="auth-card auth-card-narrow">
+    <h1 class="auth-title"><%= t('auth_forgot_title') %></h1>
+    <p class="auth-sub"><%= t('auth_forgot_sub') %></p>
+    <% if (sent) { %>
+      <div class="alert alert-success" role="status"><%= t('auth_reset_sent') %></div>
+      <% if (resetLink) { %>
+        <div class="reset-link-box">
+          <p class="field-hint">Recovery link (development mode, no mailer installed yet):</p>
+          <a href="<%= resetLink %>"><%= resetLink %></a>
+        </div>
+      <% } %>
+    <% } else { %>
+      <form action="/forgot" method="post" class="auth-form">
+        <div class="field">
+          <label for="email"><%= t('auth_email') %></label>
+          <input type="email" id="email" name="email" required autofocus>
+        </div>
+        <button type="submit" class="btn btn-primary btn-lg btn-block"><%= t('auth_send') %></button>
+      </form>
+    <% } %>
+    <p class="auth-switch"><a href="/"><%= t('auth_back') %></a></p>
+  </div>
+</section>
+
+<%- include('footer.html') %>

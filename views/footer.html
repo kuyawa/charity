@@ -1,0 +1,35 @@
+</main>
+<footer class="site-footer">
+  <div class="container footer-grid">
+    <div class="footer-brand">
+      <div class="brand">
+        <svg class="brand-icon" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
+          <path d="M12 21s-7.5-4.7-10-9.3C.4 8.6 2.4 5 5.8 5c2 0 3.4 1.1 4.2 2.5h4c.8-1.4 2.2-2.5 4.2-2.5 3.4 0 5.4 3.6 3.8 6.7C19.5 16.3 12 21 12 21z" fill="currentColor"/>
+        </svg>
+        <span class="brand-name"><%=appName%></span>
+      </div>
+      <p><%= t('footer_about') %></p>
+    </div>
+    <div class="footer-col">
+      <h4><%= t('footer_links') %></h4>
+      <a href="/"><%= t('nav_home') %></a>
+      <a href="/campaigns"><%= t('nav_campaigns') %></a>
+      <a href="/create"><%= t('nav_create') %></a>
+      <a href="/register"><%= t('nav_register') %></a>
+    </div>
+    <div class="footer-col">
+      <h4><%= t('footer_lang') %></h4>
+      <a href="/lang/es" lang="es"><%= t('lang_es') %></a>
+      <a href="/lang/en" lang="en"><%= t('lang_en') %></a>
+    </div>
+  </div>
+  <div class="container footer-bottom">
+    <span>&copy; <%= currentYear %> <%=appName%> • <%= t('footer_rights') %></span>
+  </div>
+</footer>
+<script src="/assets/common.js"></script>
+<% if (typeof extraScripts !== 'undefined' && extraScripts && extraScripts.length) { extraScripts.forEach(function(filename) { %>
+  <script src="/assets/<%=filename%>"></script>
+<% }); } %>
+</body>
+</html>

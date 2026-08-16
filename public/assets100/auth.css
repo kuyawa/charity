@@ -1,0 +1,37 @@
+/* auth pages (register, login, forgot, reset) */
+
+.auth-section {
+  display: flex;
+  justify-content: center;
+  padding: 60px 22px;
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 560px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 38px 36px;
+  box-shadow: var(--shadow);
+}
+.auth-card-narrow { max-width: 440px; }
+
+.auth-title { font-size: 1.7rem; letter-spacing: -0.02em; margin-bottom: 6px; }
+.auth-sub { color: var(--muted); margin-bottom: 24px; }
+
+.auth-switch { margin-top: 20px; font-size: 0.92rem; color: var(--muted); text-align: center; }
+.auth-switch a { font-weight: 600; }
+
+.reset-link-box {
+  margin-top: 16px;
+  padding: 14px 16px;
+  background: var(--surface-2);
+  border-radius: var(--radius-sm);
+  word-break: break-all;
+}
+.reset-link-box a { font-size: 0.9rem; }
+
+@media (max-width: 560px) {
+  .auth-card { padding: 28px 20px; }
+}

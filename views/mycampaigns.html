@@ -1,0 +1,113 @@
+<%- include('header.html') %>
+
+<section class="page-head">
+  <div class="container">
+    <h1 class="page-title"><%= t('my_title') %></h1>
+    <% if (rows && rows.length) { %>
+      <p class="page-sub"><%= rows.length %></p>
+    <% } else { %>
+      <p class="page-sub"><%= t('my_empty') %></p>
+    <% } %>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <% if (rows && rows.length) { %>
+      <% rows.forEach(function (row) { var c = row.campaign; %>
+        <article class="manage-card">
+          <div class="manage-head">
+            <div class="manage-title">
+              <h2><a href="/campaign/<%= c.id %>"><%= c.title %></a></h2>
+              <div class="campaign-badges">
+                <% if (c.status === 0) { %><span class="badge badge-open"><%= t('c_status_open') %></span><% } %>
+                <% if (c.status === 1) { %><span class="badge badge-closed"><%= t('c_status_closed') %></span><% } %>
+                <% if (c.status === 2) { %><span class="badge badge-cancelled"><%= t('c_status_cancelled') %></span><% } %>
+                <% if (c.status === 4) { %><span class="badge badge-invalid"><%= t('c_status_invalid') %></span><% } %>
+                <% if (c.urgent === 1) { %><span class="badge badge-urgent"><%= t('card_urgent') %></span><% } %>
+              </div>
+            </div>
+            <div class="manage-actions">
+              <a href="/campaign/<%= c.id %>" class="btn btn-ghost btn-sm"><%= t('view') %></a>
+              <% if (c.status === 0) { %>
+                <form action="/campaign/<%= c.id %>/close" method="post" onsubmit="return confirm('<%= t('my_close_confirm') %>')">
+                  <button type="submit" class="btn btn-outline btn-sm"><%= t('my_close') %></button>
+                </form>
+              <% } %>
+              <% if (c.status === 1) { %>
+                <a href="/campaign/<%= c.id %>/progress" class="btn btn-outline btn-sm"><%= t('my_addprogress') %></a>
+              <% } %>
+            </div>
+          </div>
+          <div class="manage-stats">
+            <span><%= t('card_raised') %>: <strong><%= c.raisedmoney %></strong></span>
+            <span><%= t('card_goal') %>: <strong><%= c.goalmoney %></strong></span>
+            <% if (c.status === 0) { %>
+              <span><%= t('card_daysleft') %>: <strong><%= c.daysleft %></strong></span>
+            <% } %>
+          </div>
+
+          <h3 class="manage-sub"><%= t('my_donations') %></h3>
+          <% if (row.donations && row.donations.length) { %>
+            <div class="table-wrap">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th><%= t('my_donor') %></th>
+                    <th><%= t('my_amount') %></th>
+                    <th><%= t('my_bank') %></th>
+                    <th><%= t('my_conf') %></th>
+                    <th><%= t('my_date') %></th>
+                    <th><%= t('my_status') %></th>
+                    <th><%= t('dash_actions') %></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% row.donations.forEach(function (d) { %>
+                    <tr>
+                      <td><%= d.anonymous === 1 || !d.donorname ? t('c_anonymous') : (d.donorname || d.uname) %></td>
+                      <td><%= money(d.amount) %></td>
+                      <td><%= d.bankname %></td>
+                      <td><%= d.confirmation %></td>
+                      <td><%= fmtDate(d.created) %></td>
+                      <td>
+                        <% if (d.status === 0) { %><span class="badge badge-pending"><%= t('don_pending') %></span><% } %>
+                        <% if (d.status === 1) { %><span class="badge badge-open"><%= t('don_confirmed') %></span><% } %>
+                        <% if (d.status === 2) { %><span class="badge badge-cancelled"><%= t('don_cancelled') %></span><% } %>
+                        <% if (d.status === 3) { %><span class="badge badge-refunded"><%= t('don_refunded') %></span><% } %>
+                        <% if (d.status === 4) { %><span class="badge badge-invalid"><%= t('don_invalid') %></span><% } %>
+                      </td>
+                      <td class="table-actions">
+                        <% if (d.status === 0) { %>
+                          <form action="/campaign/<%= c.id %>/donation/<%= d.id %>/status" method="post">
+                            <input type="hidden" name="status" value="1">
+                            <button type="submit" class="btn btn-ghost btn-xs"><%= t('my_confirm') %></button>
+                          </form>
+                          <form action="/campaign/<%= c.id %>/donation/<%= d.id %>/status" method="post">
+                            <input type="hidden" name="status" value="2">
+                            <button type="submit" class="btn btn-ghost btn-xs danger"><%= t('my_cancel') %></button>
+                          </form>
+                        <% } else { %>
+                          <span class="muted">—</span>
+                        <% } %>
+                      </td>
+                    </tr>
+                  <% }); %>
+                </tbody>
+              </table>
+            </div>
+          <% } else { %>
+            <p class="empty-note"><%= t('my_donations_empty') %></p>
+          <% } %>
+        </article>
+      <% }); %>
+    <% } else { %>
+      <div class="empty-state">
+        <p><%= t('my_empty') %></p>
+        <a href="/create" class="btn btn-primary"><%= t('my_create') %></a>
+      </div>
+    <% } %>
+  </div>
+</section>
+
+<%- include('footer.html') %>

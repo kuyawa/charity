@@ -1,0 +1,30 @@
+<%- include('header.html') %>
+
+<section class="page-head">
+  <div class="container">
+    <h1 class="page-title"><%= t('list_title') %></h1>
+    <p class="page-sub"><%= t('list_subtitle') %></p>
+    <div class="filter-bar" role="group" aria-label="filter">
+      <a href="/campaigns" class="filter-pill <%= filter === 'all' ? 'active' : '' %>"><%= t('filter_all') %></a>
+      <a href="/campaigns?f=open" class="filter-pill <%= filter === 'open' ? 'active' : '' %>"><%= t('filter_open') %></a>
+      <a href="/campaigns?f=closed" class="filter-pill <%= filter === 'closed' ? 'active' : '' %>"><%= t('filter_closed') %></a>
+      <a href="/campaigns?f=urgent" class="filter-pill <%= filter === 'urgent' ? 'active' : '' %>"><%= t('filter_urgent') %></a>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <% if (campaigns && campaigns.length) { %>
+      <div class="cards-grid">
+        <% campaigns.forEach(function (c) { %>
+          <%- include('card.html', { campaign: c }) %>
+        <% }); %>
+      </div>
+    <% } else { %>
+      <p class="empty-note"><%= t('list_empty') %></p>
+    <% } %>
+  </div>
+</section>
+
+<%- include('footer.html') %>

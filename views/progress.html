@@ -1,0 +1,43 @@
+<%- include('header.html') %>
+
+<section class="page-head">
+  <div class="container">
+    <h1 class="page-title"><%= t('prog_title') %></h1>
+    <p class="page-sub"><%= t('prog_subtitle') %></p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container container-narrow">
+    <% if (err) { %>
+      <div class="alert alert-error" role="alert"><%= t(err) %></div>
+    <% } %>
+
+    <div class="progress-post target-card">
+      <div class="progress-post-head">
+        <h3><%= campaign.title %></h3>
+        <span class="badge badge-closed"><%= t('c_status_closed') %></span>
+      </div>
+    </div>
+
+    <form action="/campaign/<%= campaign.id %>/progress" method="post" enctype="multipart/form-data" class="card-form" id="progressForm" novalidate>
+      <div class="field">
+        <label for="title"><%= t('prog_p_title') %></label>
+        <input type="text" id="title" name="title" placeholder="<%= t('prog_p_title_ph') %>" required>
+      </div>
+      <div class="field">
+        <label for="text"><%= t('prog_p_text') %></label>
+        <textarea id="text" name="text" rows="6" placeholder="<%= t('prog_p_text_ph') %>" required></textarea>
+      </div>
+      <div class="field">
+        <label for="images"><%= t('prog_p_images') %></label>
+        <input type="file" id="images" name="images" accept=".jpg,.jpeg,.png,.webp,.gif" multiple>
+        <p class="field-hint" id="imagesHint" data-default="<%= t('prog_p_images_note') %>"><%= t('prog_p_images_note') %></p>
+        <div class="image-previews" id="imagePreviews"></div>
+      </div>
+      <button type="submit" class="btn btn-primary btn-lg btn-block"><%= t('prog_p_submit') %></button>
+    </form>
+  </div>
+</section>
+
+<%- include('footer.html') %>

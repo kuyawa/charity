@@ -1,0 +1,157 @@
+<%- include('header.html') %>
+
+<section class="page-head">
+  <div class="container">
+    <h1 class="page-title"><%= t('dash_title') %></h1>
+    <p class="page-sub"><%= t('dash_subtitle') %></p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="stats-grid">
+      <div class="stat-card">
+        <span class="stat-card-value"><%= stats.campaigns %></span>
+        <span class="stat-card-label"><%= t('dash_campaigns') %></span>
+        <div class="stat-card-extra">
+          <span><%= stats.open %> <%= t('dash_open') %></span>
+          <span><%= stats.closed %> <%= t('dash_closed') %></span>
+          <span><%= stats.urgent %> <%= t('dash_urgent') %></span>
+        </div>
+      </div>
+      <div class="stat-card">
+        <span class="stat-card-value"><%= stats.donations %></span>
+        <span class="stat-card-label"><%= t('dash_donations') %></span>
+        <div class="stat-card-extra"><span><%= t('dash_total_raised') %>: <%= stats.raised %></span></div>
+      </div>
+      <div class="stat-card">
+        <span class="stat-card-value"><%= stats.users %></span>
+        <span class="stat-card-label"><%= t('dash_users') %></span>
+      </div>
+    </div>
+
+    <div class="dash-section">
+      <h2 class="dash-section-title"><%= t('dash_latest_campaigns') %></h2>
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th><%= t('dash_title_c') %></th>
+              <th><%= t('dash_org') %></th>
+              <th><%= t('card_raised') %></th>
+              <th><%= t('dash_status') %></th>
+              <th><%= t('dash_urgent') %></th>
+              <th><%= t('dash_created') %></th>
+              <th><%= t('dash_actions') %></th>
+            </tr>
+          </thead>
+          <tbody>
+            <% campaigns.forEach(function (c) { %>
+              <tr>
+                <td><a href="/campaign/<%= c.id %>" class="table-link"><%= c.title %></a></td>
+                <td><%= c.ownername %></td>
+                <td><%= c.raisedmoney %> / <%= c.goalmoney %></td>
+                <td>
+                  <% if (c.status === 0) { %><span class="badge badge-open"><%= t('c_status_open') %></span><% } %>
+                  <% if (c.status === 1) { %><span class="badge badge-closed"><%= t('c_status_closed') %></span><% } %>
+                  <% if (c.status === 2) { %><span class="badge badge-cancelled"><%= t('c_status_cancelled') %></span><% } %>
+                  <% if (c.status === 4) { %><span class="badge badge-invalid"><%= t('c_status_invalid') %></span><% } %>
+                </td>
+                <td><%= c.urgent === 1 ? t('card_urgent') : '—' %></td>
+                <td><%= fmtDate(c.created) %></td>
+                <td class="table-actions">
+                  <div class="btn-group">
+                    <% if (c.status === 0 || c.status === 1) { %>
+                      <form action="/admin/campaign/<%= c.id %>/deactivate" method="post">
+                        <button type="submit" class="btn btn-ghost btn-xs danger"><%= t('dash_deactivate') %></button>
+                      </form>
+                    <% } else { %>
+                      <form action="/admin/campaign/<%= c.id %>/activate" method="post">
+                        <button type="submit" class="btn btn-ghost btn-xs"><%= t('dash_activate') %></button>
+                      </form>
+                    <% } %>
+                    <% if (c.status === 0) { %>
+                      <% if (c.urgent === 1) { %>
+                        <form action="/admin/campaign/<%= c.id %>/unurgent" method="post">
+                          <button type="submit" class="btn btn-ghost btn-xs"><%= t('dash_unmark_urgent') %></button>
+                        </form>
+                      <% } else { %>
+                        <form action="/admin/campaign/<%= c.id %>/urgent" method="post">
+                          <button type="submit" class="btn btn-ghost btn-xs"><%= t('dash_mark_urgent') %></button>
+                        </form>
+                      <% } %>
+                    <% } %>
+                  </div>
+                </td>
+              </tr>
+            <% }); %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="dash-section">
+      <h2 class="dash-section-title"><%= t('dash_latest_donations') %></h2>
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th><%= t('dash_donor') %></th>
+              <th><%= t('dash_title_c') %></th>
+              <th><%= t('dash_amount') %></th>
+              <th><%= t('dash_status') %></th>
+              <th><%= t('dash_created') %></th>
+            </tr>
+          </thead>
+          <tbody>
+            <% donations.forEach(function (d) { %>
+              <tr>
+                <td><%= d.anonymous === 1 || !d.donorname ? t('c_anonymous') : (d.donorname || d.uname || '—') %></td>
+                <td><a href="/campaign/<%= d.campaignid %>" class="table-link"><%= d.ctitle || '—' %></a></td>
+                <td><%= money(d.amount) %></td>
+                <td>
+                  <% if (d.status === 0) { %><span class="badge badge-pending"><%= t('don_pending') %></span><% } %>
+                  <% if (d.status === 1) { %><span class="badge badge-open"><%= t('don_confirmed') %></span><% } %>
+                  <% if (d.status === 2) { %><span class="badge badge-cancelled"><%= t('don_cancelled') %></span><% } %>
+                  <% if (d.status === 3) { %><span class="badge badge-refunded"><%= t('don_refunded') %></span><% } %>
+                  <% if (d.status === 4) { %><span class="badge badge-invalid"><%= t('don_invalid') %></span><% } %>
+                </td>
+                <td><%= fmtDate(d.created) %></td>
+              </tr>
+            <% }); %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="dash-section">
+      <h2 class="dash-section-title"><%= t('dash_latest_users') %></h2>
+      <div class="table-wrap">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th><%= t('auth_name') %></th>
+              <th><%= t('auth_userid') %></th>
+              <th><%= t('auth_email') %></th>
+              <th><%= t('auth_country') %></th>
+              <th><%= t('dash_created') %></th>
+            </tr>
+          </thead>
+          <tbody>
+            <% users.forEach(function (u) { %>
+              <tr>
+                <td><%= u.name %><% if (u.isadmin === 1) { %> <span class="badge badge-admin">admin</span><% } %></td>
+                <td><%= u.userid %></td>
+                <td><%= u.email %></td>
+                <td><%= u.country || '—' %></td>
+                <td><%= fmtDate(u.created) %></td>
+              </tr>
+            <% }); %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<%- include('footer.html') %>

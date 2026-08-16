@@ -1,0 +1,37 @@
+/* admin dashboard */
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  margin-bottom: 40px;
+}
+
+.stat-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+  box-shadow: var(--shadow-sm);
+}
+.stat-card-value { display: block; font-size: 2.1rem; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 4px; }
+.stat-card-label { color: var(--muted); font-size: 0.88rem; font-weight: 600; }
+.stat-card-extra { display: flex; gap: 14px; margin-top: 12px; flex-wrap: wrap; }
+.stat-card-extra span {
+  font-size: 0.8rem;
+  color: var(--muted);
+  background: var(--surface-2);
+  border-radius: 999px;
+  padding: 4px 12px;
+}
+
+.dash-section { margin-bottom: 42px; }
+.dash-section-title {
+  font-size: 1.15rem;
+  letter-spacing: -0.02em;
+  margin-bottom: 16px;
+}
+
+@media (max-width: 860px) {
+  .stats-grid { grid-template-columns: 1fr; }
+}

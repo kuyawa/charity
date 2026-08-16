@@ -1,0 +1,61 @@
+<%- include('header.html') %>
+
+<section class="auth-section">
+  <div class="auth-card">
+    <h1 class="auth-title"><%= t('auth_register_title') %></h1>
+    <p class="auth-sub"><%= t('auth_register_sub') %></p>
+    <% if (err) { %>
+      <div class="alert alert-error" role="alert"><%= t(err) %></div>
+    <% } %>
+    <form action="/register" method="post" class="auth-form" id="registerForm" novalidate>
+      <div class="field">
+        <label for="name"><%= t('auth_name') %></label>
+        <input type="text" id="name" name="name" value="<%= form.name || '' %>" required>
+      </div>
+      <div class="field">
+        <label for="userid"><%= t('auth_userid') %></label>
+        <input type="text" id="userid" name="userid" value="<%= form.userid || '' %>" pattern="[a-z0-9][a-z0-9._-]*" required>
+        <p class="field-hint"><%= t('auth_userid_hint') %></p>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label for="govid"><%= t('auth_govid') %></label>
+          <input type="text" id="govid" name="govid" value="<%= form.govid || '' %>">
+        </div>
+        <div class="field">
+          <label for="phone"><%= t('auth_phone') %></label>
+          <input type="text" id="phone" name="phone" value="<%= form.phone || '' %>">
+        </div>
+      </div>
+      <div class="field">
+        <label for="address"><%= t('auth_address') %></label>
+        <input type="text" id="address" name="address" value="<%= form.address || '' %>">
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label for="email"><%= t('auth_email') %></label>
+          <input type="email" id="email" name="email" value="<%= form.email || '' %>" required>
+        </div>
+        <div class="field">
+          <label for="country"><%= t('auth_country') %></label>
+          <input type="text" id="country" name="country" value="<%= form.country || '' %>" maxlength="2" placeholder="US, MX, CO...">
+        </div>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label for="password"><%= t('auth_password') %></label>
+          <input type="password" id="password" name="password" minlength="6" required>
+        </div>
+        <div class="field">
+          <label for="confirm"><%= t('auth_confirm') %></label>
+          <input type="password" id="confirm" name="confirm" minlength="6" required>
+        </div>
+      </div>
+      <p class="form-error hidden" id="formError" role="alert"></p>
+      <button type="submit" class="btn btn-primary btn-lg btn-block"><%= t('auth_submit') %></button>
+    </form>
+    <p class="auth-switch"><%= t('auth_hasaccount') %> <a href="/login"><%= t('auth_login_link') %></a></p>
+  </div>
+</section>
+
+<%- include('footer.html') %>

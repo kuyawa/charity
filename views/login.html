@@ -1,0 +1,27 @@
+<%- include('header.html') %>
+
+<section class="auth-section">
+  <div class="auth-card auth-card-narrow">
+    <h1 class="auth-title"><%= t('auth_login_title') %></h1>
+    <p class="auth-sub"><%= t('auth_login_sub') %></p>
+    <% if (err) { %>
+      <div class="alert alert-error" role="alert"><%= t(err) %></div>
+    <% } %>
+    <form action="/login" method="post" class="auth-form">
+      <input type="hidden" name="next" value="<%= query.next || '/' %>">
+      <div class="field">
+        <label for="email"><%= t('auth_email') %></label>
+        <input type="email" id="email" name="email" value="<%= form.email || '' %>" required autofocus>
+      </div>
+      <div class="field">
+        <label for="password"><%= t('auth_password') %></label>
+        <input type="password" id="password" name="password" required>
+      </div>
+      <button type="submit" class="btn btn-primary btn-lg btn-block"><%= t('auth_login_btn') %></button>
+    </form>
+    <p class="auth-switch"><a href="/forgot"><%= t('auth_forgot') %></a></p>
+    <p class="auth-switch"><%= t('auth_noaccount') %> <a href="/register"><%= t('auth_register_link') %></a></p>
+  </div>
+</section>
+
+<%- include('footer.html') %>

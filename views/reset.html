@@ -1,0 +1,36 @@
+<%- include('header.html') %>
+
+<section class="auth-section">
+  <div class="auth-card auth-card-narrow">
+    <h1 class="auth-title"><%= t('auth_reset_title') %></h1>
+    <p class="auth-sub"><%= t('auth_reset_sub') %></p>
+    <% if (done) { %>
+      <div class="alert alert-success" role="status"><%= t('auth_reset_done') %></div>
+      <a href="/login" class="btn btn-primary btn-block"><%= t('auth_login_btn') %></a>
+    <% } else if (valid) { %>
+      <% if (err) { %>
+        <div class="alert alert-error" role="alert"><%= t(err) %></div>
+      <% } %>
+      <form action="/reset" method="post" class="auth-form" id="resetForm" novalidate>
+        <input type="hidden" name="token" value="<%= token %>">
+        <div class="field">
+          <label for="password"><%= t('auth_password') %></label>
+          <input type="password" id="password" name="password" minlength="6" required>
+        </div>
+        <div class="field">
+          <label for="confirm"><%= t('auth_confirm') %></label>
+          <input type="password" id="confirm" name="confirm" minlength="6" required>
+        </div>
+        <p class="form-error hidden" id="formError" role="alert"></p>
+        <button type="submit" class="btn btn-primary btn-lg btn-block"><%= t('auth_reset_btn') %></button>
+      </form>
+    <% } else { %>
+      <% if (err) { %>
+        <div class="alert alert-error" role="alert"><%= t(err) %></div>
+      <% } %>
+      <p class="auth-switch"><a href="/forgot"><%= t('auth_forgot') %></a></p>
+    <% } %>
+  </div>
+</section>
+
+<%- include('footer.html') %>

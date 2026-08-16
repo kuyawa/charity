@@ -1,0 +1,14 @@
+.DS_Store
+.env
+.env.local
+.env.server
+.memory.json
+.server.log
+package-lock.json
+stderr.log
+todo.txt
+.backups/
+.npmcache/
+.pgdata/
+node_modules/
+work/
