@@ -362,13 +362,13 @@ app.get('/campaign/:control', async (req, res, next) => {
     if (!campaign){ return res.status(404).render('404', { title: res.locals.t('err_404_title'), extraCss: ['error.css'] }); }
     const id = campaign.id
     campaign = await maybeClose(campaign);
-
     const [images, donations, progress, raised] = await Promise.all([
-      db.listCampaignImages(campaign.id),
-      db.listDonationsByCampaign(campaign.id),
-      db.listProgress(campaign.id),
-      db.raisedByCampaign(campaign.id)
+      db.listCampaignImages(id),
+      db.listDonationsByCampaign(id),
+      db.listProgress(id),
+      db.raisedByCampaign(id)
     ]);
+    //console.log('DONATIONS', donations)
     campaign.raised = raised;
     campaign.raisedmoney = utils.money(raised, res.locals.language);
     campaign.goalmoney = utils.money(campaign.goalamount, res.locals.language);
@@ -380,7 +380,7 @@ app.get('/campaign/:control', async (req, res, next) => {
     campaign.iscancelled = campaign.status === 2;
     campaign.isinvalid = campaign.status === 4;
 
-    const confirmed = donations.filter((d) => d.status === 1);
+    //const confirmed = donations.filter((d) => d.status === 1);
     const isOwner = res.locals.user && res.locals.user.userid === campaign.userid;
 
     res.render('campaign', {
@@ -389,7 +389,7 @@ app.get('/campaign/:control', async (req, res, next) => {
       extraScripts: ['campaign.js'],
       campaign,
       images,
-      donations: confirmed,
+      donations,
       progress,
       isOwner,
       donated: req.query.donated === '1',
@@ -418,7 +418,7 @@ app.post('/campaign/:control/donate', async (req, res, next) => {
     const bankname = String(req.body.bankname || '').trim();
     const confirmation = String(req.body.confirmation || '').trim();
     const donorname = String(req.body.donorname || '').trim();
-    const anonymous = req.body.anonymous === 'true' || !donorname;
+    const anonymous = req.body.anonymous == 'true' || !donorname;
     if (!amount || amount <= 0) return res.redirect('/campaign/' + control + '?err=amount');
     if (!bankname || !confirmation) return res.redirect('/campaign/' + control + '?err=bad_request');
     await db.createDonation({
@@ -428,7 +428,7 @@ app.post('/campaign/:control/donate', async (req, res, next) => {
       bankname,
       confirmation,
       donorname: anonymous ? '' : donorname,
-      anonymous: anonymous
+      anonymous
     });
     await db.touch(id);
     res.redirect('/campaign/' + control + '?donated=1');

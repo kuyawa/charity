@@ -29,7 +29,7 @@
         <% } %>
         <a href="/create" class="nav-link <%= path === '/create' ? 'active' : '' %>"><%= t('nav_create') %></a>
         <a href="/mycampaigns" class="nav-link <%= path === '/mycampaigns' ? 'active' : '' %>"><%= t('nav_mycampaigns') %></a>
-        <a href="/logout" class="nav-link"><%= t('nav_logout') %></a>
+        <!-- <a href="/logout" class="nav-link"><%= t('nav_logout') %></a> -->
       <% } else { %>
         <a href="/login" class="nav-link"><%= t('nav_login') %></a>
         <a href="/register" class="nav-link"><%= t('nav_register') %></a>
@@ -53,9 +53,6 @@
  -->
           </a>
         </div>
-      <% } else { %>
-        <a href="/login" class="btn btn-ghost btn-sm"><%= t('nav_login') %></a>
-        <a href="/register" class="btn btn-ghost btn-sm"><%= t('nav_register') %></a>
       <% } %>
       <div class="lang-switch" role="group" aria-label="<%= t('footer_lang') %>">
         <a href="/lang/es" class="<%= language === 'es' ? 'active' : '' %>" lang="es">ES</a>

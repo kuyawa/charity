@@ -48,7 +48,7 @@
           <tbody>
             <% campaigns.forEach(function (c) { %>
               <tr>
-                <td><a href="/campaign/<%= c.id %>" class="table-link"><%= c.title %></a></td>
+                <td><a href="/campaign/<%= c.control %>" class="table-link"><%= c.title %></a></td>
                 <td><%= c.ownername %></td>
                 <td><%= c.raisedmoney %> / <%= c.goalmoney %></td>
                 <td>

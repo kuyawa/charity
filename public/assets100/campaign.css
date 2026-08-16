@@ -134,6 +134,12 @@
 .donation-name { font-weight: 600; font-size: 0.93rem; }
 .donation-date { color: var(--muted); font-size: 0.82rem; margin-left: auto; }
 .donation-amount { font-weight: 800; }
+.donation-check  { line-height: 1rem; align-items: center; }
+.donation-pending { color: var(--muted) }
+.donation-totals { border-top: 1px solid var(--border); text-align: right; }
+.donation-totals li { display: flex; justify-content: flex-end; align-items: center; list-style: none; padding: 13px 4px 0; }
+.donation-totals li svg { margin-left: 12px; }
+.donation-total { margin-right: 12px; color: var(--muted); font-size: 0.9rem; font-weight: bold; }
 
 /* sidebar */
 .campaign-side { display: flex; flex-direction: column; gap: 18px; position: sticky; top: calc(var(--header-h) + 18px); }

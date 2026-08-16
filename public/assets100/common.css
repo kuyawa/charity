@@ -114,11 +114,12 @@ img { max-width: 100%; display: block; }
 .brand-icon { color: var(--accent); }
 
 .main-nav {
-  display: none;
+  display: flex;
+  justify-content: flex-end;
   align-items: center;
+  flex: 1;
   gap: 4px;
   margin-left: 14px;
-  flex: 1;
 }
 
 .nav-link {

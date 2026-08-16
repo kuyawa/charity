@@ -1,3 +1,15 @@
+<%
+function getAvatarChars(name, anon=false){
+  const parts = name.split(' ')
+  let c0=''
+  let c1=''
+  if(parts.length > 0){ c0 = parts[0].substr(0,1).toUpperCase() }
+  if(parts.length > 1){ c1 = parts[1].substr(0,1).toUpperCase() }
+  const chars = c0+c1 || '?'
+  return (anon || !name) ? '?' : chars
+}
+%>
+
 <%- include('header.html') %>
 
 <div class="container">
@@ -104,15 +116,30 @@
           <h2 class="campaign-section-title"><%= t('c_donations_title') %></h2>
           <% if (donations && donations.length) { %>
             <ul class="donation-list">
-              <% donations.forEach(function (d) { %>
+              <% let totalConf = 0
+                 let totalPend = 0
+                 donations.forEach(function (d) { 
+                   if(d.status==1){ totalConf += parseFloat(d.amount) } else { totalPend += parseFloat(d.amount) }
+              %>
                 <li class="donation-row">
-                  <span class="donation-avatar"><%= d.anonymous === 1 || !d.donorname ? '?' : String(d.donorname).charAt(0).toUpperCase() %></span>
-                  <span class="donation-name"><%= d.anonymous === 1 || !d.donorname ? t('c_anonymous') : d.donorname %></span>
+                  <span class="donation-avatar"><%= getAvatarChars(d.donorname) %></span>
+                  <span class="donation-name"><%= d.anonymous || !d.donorname ? t('c_anonymous') : d.donorname %></span>
                   <span class="donation-date"><%= fmtDate(d.created) %></span>
-                  <span class="donation-amount"><%= money(d.amount) %></span>
+                  <span class="donation-amount <%=d.status==0 ? 'donation-pending' : '' %>"><%= money(d.amount) %></span>
+                  <span class="donation-check">
+                  <% if(d.status==1) { %>
+                    <svg viewBox="0 0 448 512" width="20px" height="20px"><path fill="#0c0" d="M384 32c35.3 0 64 28.7 64 64l0 320c0 35.3-28.7 64-64 64L64 480c-35.3 0-64-28.7-64-64L0 96C0 60.7 28.7 32 64 32l320 0zM64 80c-8.8 0-16 7.2-16 16l0 320c0 8.8 7.2 16 16 16l320 0c8.8 0 16-7.2 16-16l0-320c0-8.8-7.2-16-16-16L64 80zm230.7 89.9c7.8-10.7 22.8-13.1 33.5-5.3 10.7 7.8 13.1 22.8 5.3 33.5L211.4 366.1c-4.1 5.7-10.5 9.3-17.5 9.8-7 .5-13.9-2-18.8-6.9l-55.9-55.9c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l36 36 105.6-145.2z"/></svg>
+                  <% } else { %>
+                    <svg viewBox="0 0 448 512" width="20px" height="20px"><path fill="#aaa" d="M384 80c8.8 0 16 7.2 16 16l0 320c0 8.8-7.2 16-16 16L64 432c-8.8 0-16-7.2-16-16L48 96c0-8.8 7.2-16 16-16l320 0zM64 32C28.7 32 0 60.7 0 96L0 416c0 35.3 28.7 64 64 64l320 0c35.3 0 64-28.7 64-64l0-320c0-35.3-28.7-64-64-64L64 32z"/></svg>
+                  <% } %>
+                  </span>
                 </li>
               <% }); %>
             </ul>
+            <div class="donation-totals">
+              <li><span class="donation-total"><%=t('don_confirmed')%>:</span><span class="donation-amount"><%=money(totalConf)%></span><span class="donation-check"><svg viewBox="0 0 448 512" width="20px" height="20px"><path fill="#0c0" d="M384 32c35.3 0 64 28.7 64 64l0 320c0 35.3-28.7 64-64 64L64 480c-35.3 0-64-28.7-64-64L0 96C0 60.7 28.7 32 64 32l320 0zM64 80c-8.8 0-16 7.2-16 16l0 320c0 8.8 7.2 16 16 16l320 0c8.8 0 16-7.2 16-16l0-320c0-8.8-7.2-16-16-16L64 80zm230.7 89.9c7.8-10.7 22.8-13.1 33.5-5.3 10.7 7.8 13.1 22.8 5.3 33.5L211.4 366.1c-4.1 5.7-10.5 9.3-17.5 9.8-7 .5-13.9-2-18.8-6.9l-55.9-55.9c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0l36 36 105.6-145.2z"/></svg></span></li>
+              <li><span class="donation-total"><%=t('don_pending')%>:</span><span class="donation-amount donation-pending"><%=money(totalPend)%></span><span class="donation-check"><svg viewBox="0 0 448 512" width="20px" height="20px"><path fill="#aaa" d="M384 80c8.8 0 16 7.2 16 16l0 320c0 8.8-7.2 16-16 16L64 432c-8.8 0-16-7.2-16-16L48 96c0-8.8 7.2-16 16-16l320 0zM64 32C28.7 32 0 60.7 0 96L0 416c0 35.3 28.7 64 64 64l320 0c35.3 0 64-28.7 64-64l0-320c0-35.3-28.7-64-64-64L64 32z"/></svg></span></li>
+            </div>
           <% } else { %>
             <p class="empty-note"><%= t('c_donations_empty') %></p>
           <% } %>
