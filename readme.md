@@ -1,6 +1,8 @@
 # Charity
 
-Charity is a donations platform, inspired by crowdfunding sites like GoFundMe, where people can create donation campaigns and donors can support causes through direct bank deposits.
+Charity is a donations platform, inspired by crowdfunding sites, where people can create donation campaigns and donors can support causes through direct bank deposits.
+
+![webshot](public/media/webshot.jpg)
 
 The application is bilingual (Spanish by default, English available). The language is detected from the browser and the user can switch at any time. All source code, database tables, fields, functions and libraries are written in English; all user-facing text lives in the translations file `lang.js`.
 
