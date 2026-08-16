@@ -207,22 +207,6 @@ Admin routes (admins only):
 - Campaign images are stored under `uploads/campaigns/<campaignid>/` and progress images under `uploads/progress/<progressid>/` with unique filenames.
 - A campaign accepts up to 10 images; the first uploaded image becomes the cover.
 
-## Demo accounts
-
-After loading `dummydata.sql`:
-
-| Role | Email | Password |
-| --- | --- | --- |
-| Admin | `admin@example.com` | `admin123` |
-| Fundraiser | `maria@example.com` | `fund123` |
-| Fundraiser | `carlos@example.com` | `fund123` |
-| Fundraiser | `lucia@example.com` | `fund123` |
-| Fundraiser | `pedro@example.com` | `fund123` |
-| Donor | `ana@example.com` | `donor123` |
-| Donor | `jorge@example.com` | `donor123` |
-| Donor | `elena@example.com` | `donor123` |
-| Donor | `luis@example.com` | `donor123` |
-
 ## Notes for the future
 
 - The `commission` field on campaigns is reserved and stays at 0; a future commission per donation can be implemented on top of it.
