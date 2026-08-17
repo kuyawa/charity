@@ -187,6 +187,7 @@
 .donate-form-card { border-color: color-mix(in srgb, var(--accent) 40%, var(--border)); }
 
 @media (max-width: 960px) {
+  .donation-date { visibility: hidden; }
   .campaign-layout { grid-template-columns: 1fr; }
   .campaign-side { position: static; }
 }

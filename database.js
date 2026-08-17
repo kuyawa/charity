@@ -100,7 +100,7 @@ class Database {
 
   async findCampaignById(id) {
     const r = await this.pool.query(
-      `SELECT c.*, u.name AS ownername, u.userid AS ownerid, u.country AS ownercountry
+      `SELECT c.*, u.name AS ownername, u.userid AS ownerid, u.country AS ownercountry, u.govid, u.phone
        FROM campaigns c JOIN users u ON u.userid = c.userid
        WHERE c.id = $1`,
       [id]
@@ -110,7 +110,7 @@ class Database {
 
   async findCampaignByControl(control) {
     const r = await this.pool.query(
-      `SELECT c.*, u.name AS ownername, u.userid AS ownerid, u.country AS ownercountry
+      `SELECT c.*, u.name AS ownername, u.userid AS ownerid, u.country AS ownercountry, u.govid, u.phone
        FROM campaigns c JOIN users u ON u.userid = c.userid
        WHERE c.control = $1`,
       [control]

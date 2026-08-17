@@ -1,5 +1,16 @@
 /* index page */
 
+.section {
+  padding: 3.5rem 0;
+}
+
+section.info {
+  display: block;
+  padding: 50px 5%;
+  background-color: var(--bg-info);
+}
+
+
 .hero {
   height: 600px;
   padding: 72px 0 60px;
@@ -37,12 +48,6 @@
   margin-top: 400px;
   margin-bottom: 18px;
   color: white;
-}
-
-section.info {
-  display: block;
-  padding: 50px 5%;
-  background-color: var(--bg-info);
 }
 
 .hero-subtitle {
