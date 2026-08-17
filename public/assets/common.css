@@ -284,6 +284,8 @@ img { max-width: 100%; display: block; }
 .badge-cancelled, .badge-invalid, .badge-pending { background: var(--warning-soft); color: var(--warning); }
 .badge-refunded { background: var(--danger-soft); color: var(--danger); }
 .badge-admin { background: var(--accent-soft); color: var(--accent); }
+.badge-urgent-top { width: 100%; background: var(--accent); color: white; }
+.badge-urgent-top { background: linear-gradient(90deg, var(--accent), var(--accent), transparent); }
 
 .campaign-badges { display: flex; gap: 8px; flex-wrap: wrap; }
 
@@ -544,7 +546,7 @@ img { max-width: 100%; display: block; }
     box-shadow: var(--shadow);
   }
   .main-nav.open { display: flex; }
-  .nav-link { padding: 11px 14px; }
+  .nav-link { width: 100%; padding: 11px 14px; }
   .nav-toggle { display: inline-flex; }
   .header-actions .btn-sm { display: none; }
   .user-name { display: none; }

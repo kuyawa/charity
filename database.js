@@ -122,7 +122,7 @@ class Database {
     const base = `SELECT c.*, u.name AS ownername FROM campaigns c JOIN users u ON u.userid = c.userid`;
     let sql = base + ' ORDER BY c.created DESC';
     const params = [];
-    if (filter === 'open') { sql = base + ' WHERE c.status = 0 ORDER BY c.created DESC'; }
+    if (filter === 'open')   { sql = base + ' WHERE c.status = 0 ORDER BY c.created DESC'; }
     if (filter === 'closed') { sql = base + ' WHERE c.status = 1 ORDER BY c.updated DESC'; }
     if (filter === 'urgent') { sql = base + ' WHERE c.urgent = 1 AND c.status = 0 ORDER BY c.created DESC'; }
     if (limit) { params.push(limit); sql += ' LIMIT $' + params.length; }
@@ -134,8 +134,12 @@ class Database {
     return this.listCampaigns('urgent', limit);
   }
 
-  async listRecentOpen(limit) {
-    return this.listCampaigns('open', limit);
+  async listRecentOpen(limit=8) {
+    let sql = `SELECT c.*, u.name AS ownername FROM campaigns c JOIN users u ON u.userid = c.userid
+                  WHERE c.status = 0 AND c.urgent = 0 ORDER BY c.created DESC LIMIT $1`;
+    const params = [limit];
+    const r = await this.pool.query(sql, params);
+    return r.rows;
   }
 
   async listRecentClosed(limit) {

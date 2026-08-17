@@ -12,8 +12,8 @@
           </svg>
         </div>
       <% } %>
-      <% if (campaign.urgent === 1) { %>
-        <span class="badge badge-urgent"><%= t('card_urgent') %></span>
+      <% if (campaign.urgent === 1 && campaign.status !== 2) { %>
+        <span class="badge badge-urgent-top"><%= t('card_urgent') %></span>
       <% } %>
       <% if (campaign.status === 2) { %>
         <span class="badge badge-cancelled"><%= t('card_cancelled') %></span>
