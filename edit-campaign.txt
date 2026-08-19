@@ -1,0 +1,10 @@
+Allow to edit campaigns by fundraiser
+
+Once the campaign has been created, allow the fundraiser to edit the campaign data
+Add a link 'Edit' in every campaign to 'My Campaigns' next to 'View' link
+Use campaign control field as identifier 
+Use /campaign/:control/edit as router
+Add code for the GET route to show the edit form
+Edit form is like the create campaign form but named 'edit' 
+Submit calls the POST /campaign/:control/edit validates the data and saves it to the db
+Then redirects to the campaign at /campaign/:control

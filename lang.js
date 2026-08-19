@@ -142,6 +142,17 @@ const lang = {
     create_fee_missing: 'Debes confirmar que depositaste la tarifa de publicación.',
     create_confirm_fee: 'Confirmo que deposité la tarifa de $5 a la cuenta de '+config.appName,
 
+    // edit campaign
+    edit: 'Editar',
+    edit_title: 'Editar campaña',
+    edit_subtitle: 'Actualiza los datos de tu campaña.',
+    edit_submit: 'Guardar cambios',
+    edit_done: 'La campaña fue actualizada.',
+    edit_images_note: 'Agrega imágenes nuevas a la campaña (máximo 10 en total).',
+    edit_current_images: 'Imágenes actuales',
+    img_expand: 'Ampliar imagen',
+    img_close: 'Cerrar',
+
     // my campaigns
     my_title: 'Mis campañas',
     my_empty: 'Aún no has creado campañas.',
@@ -410,6 +421,17 @@ const lang = {
     create_success: 'Your campaign was published!',
     create_fee_missing: 'You must confirm that you deposited the publication fee.',
     create_confirm_fee: 'I confirm that I deposited the $5 fee to the '+config.appName+' account.',
+
+    // edit campaign
+    edit: 'Edit',
+    edit_title: 'Edit campaign',
+    edit_subtitle: 'Update your campaign details.',
+    edit_submit: 'Save changes',
+    edit_done: 'The campaign was updated.',
+    edit_images_note: 'Add new images to the campaign (max 10 total).',
+    edit_current_images: 'Current images',
+    img_expand: 'Expand image',
+    img_close: 'Close',
 
     // my campaigns
     my_title: 'My campaigns',

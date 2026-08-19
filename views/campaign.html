@@ -29,6 +29,9 @@ function getAvatarChars(name, anon=false){
   <% if (progressed) { %>
     <div class="alert alert-success" role="status"><strong><%= t('prog_success') %></strong></div>
   <% } %>
+  <% if (updated) { %>
+    <div class="alert alert-success" role="status"><strong><%= t('edit_done') %></strong></div>
+  <% } %>
   <% if (query.err) { %>
     <div class="alert alert-error" role="alert"><%= t('err_' + query.err) || t('err_server') %></div>
   <% } %>
@@ -86,10 +89,11 @@ function getAvatarChars(name, anon=false){
         </div>
 
         <div class="campaign-section">
-          <h2 class="campaign-section-title"><%= t('c_progress_title') %></h2>
-          <% if (campaign.status === 1 && isOwner) { %>
-            <a href="/campaign/<%= campaign.id %>/progress" class="btn btn-primary btn-sm"><%= t('c_postprogress') %></a>
-          <% } %>
+          <h2 class="campaign-section-title"><%= t('c_progress_title') %>
+            <% if (isOwner) { %>
+              <a href="/campaign/<%= campaign.control %>/progress" class="btn btn-primary btn-sm"><%= t('c_postprogress') %></a>
+            <% } %>
+          </h2>
           <% if (progress && progress.length) { %>
             <% progress.forEach(function (p) { %>
               <article class="progress-post">
@@ -101,7 +105,9 @@ function getAvatarChars(name, anon=false){
                 <% if (p.images && p.images.length) { %>
                   <div class="progress-images">
                     <% p.images.forEach(function (img) { %>
-                      <img src="/uploads/<%= img.image %>" alt="" loading="lazy">
+                      <button type="button" class="progress-img" data-src="/uploads/progress/<%= img.image %>" aria-label="<%= t('img_expand') %>">
+                        <img src="/uploads/progress/<%= img.image %>" alt="" loading="lazy">
+                      </button>
                     <% }); %>
                   </div>
                 <% } %>
@@ -173,7 +179,7 @@ function getAvatarChars(name, anon=false){
                 <button type="button" class="btn btn-primary btn-lg btn-block" id="donateToggle"><%= t('c_donate') %></button>
               <% } %>
             <% } else { %>
-              <a href="/login?next=/campaign/<%= campaign.id %>" class="btn btn-primary btn-lg btn-block"><%= t('c_login_to_donate') %></a>
+              <a href="/login?next=/campaign/<%= campaign.control %>" class="btn btn-primary btn-lg btn-block"><%= t('c_login_to_donate') %></a>
             <% } %>
           <% } else if (campaign.status === 1) { %>
             <p class="side-note"><%= t('c_closed_note') %></p>
@@ -236,5 +242,17 @@ function getAvatarChars(name, anon=false){
     </div>
   </div>
 </section>
+
+<div class="image-modal" id="imageModal" hidden>
+  <div class="image-modal-backdrop" data-modal-close></div>
+  <div class="image-modal-box" role="dialog" aria-modal="true" aria-label="<%= t('c_images') %>">
+    <button type="button" class="image-modal-close" data-modal-close aria-label="<%= t('img_close') %>">
+      <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
+        <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+    </button>
+    <img id="imageModalImg" src="" alt="">
+  </div>
+</div>
 
 <%- include('footer.html') %>

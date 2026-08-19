@@ -55,6 +55,7 @@ app.use((req, res, next) => {
   res.locals.version = appVersion;
   res.locals.money = (v) => utils.money(v, code);
   res.locals.fmtDate = (ts) => utils.fmtDate(ts, code);
+  res.locals.fmtDateInput = (ts) => utils.fmtDateInput(ts);
   res.locals.getCountry = (c) => utils.getCountry(c);
   res.locals.t = (key) => translations[key] || lang.es[key] || key;
   res.locals.path = req.path;
@@ -395,7 +396,8 @@ app.get('/campaign/:control', async (req, res, next) => {
       isOwner,
       donated: req.query.donated === '1',
       created: req.query.created === '1',
-      progressed: req.query.progressed === '1'
+      progressed: req.query.progressed === '1',
+      updated: req.query.updated === '1'
     });
   } catch (e) { next(e); }
 });
@@ -404,7 +406,7 @@ app.post('/campaign/:control/donate', async (req, res, next) => {
   try {
     const control = req.params.control
     const user = req.locals.user;
-    if (!user) return res.redirect('/login?next=/campaign/' + id);
+    if (!user) return res.redirect('/login?next=/campaign/' + control);
     const campaign = await db.findCampaignByControl(control);
     if (!campaign) return res.status(404).render('404', { title: res.locals.t('err_404_title'), extraCss: ['error.css'] });
     const id = campaign.id
@@ -476,7 +478,7 @@ app.post('/create', requireAuth, async (req, res, next) => {
         err
       });
     }
-    const endTs = new Date(form.enddate);
+    const endTs = utils.parseDateInput(form.enddate);
     if (!endTs || endTs <= Date.now()) {
       return res.render('create', {
         title: res.locals.t('create_title'),
@@ -538,6 +540,132 @@ app.post('/create', requireAuth, async (req, res, next) => {
   }
 });
 
+// ---- edit campaign (fundraiser) ----
+
+async function canManageCampaign(campaign, user) {
+  return !!(campaign && user && (campaign.userid === user.userid || user.isadmin));
+}
+
+app.get('/campaign/:control/edit', requireAuth, async (req, res, next) => {
+  try {
+    const control = req.params.control;
+    const campaign = await db.findCampaignByControl(control);
+    if (!campaign) return res.status(404).render('404', { title: res.locals.t('err_404_title'), extraCss: ['error.css'] });
+    if (!await canManageCampaign(campaign, req.locals.user)) {
+      return res.status(403).render('403', { title: res.locals.t('err_forbidden'), extraCss: ['error.css'] });
+    }
+    const images = await db.listCampaignImages(campaign.id);
+    res.render('edit', {
+      title: res.locals.t('edit_title'),
+      extraCss: ['create.css'],
+      extraScripts: ['create.js'],
+      control,
+      campaign,
+      images,
+      form: {
+        title: campaign.title,
+        description: campaign.description,
+        goalamount: campaign.goalamount,
+        enddate: utils.fmtDateInput(campaign.enddate),
+        bankname: campaign.bankname,
+        bankaccount: campaign.bankaccount,
+        bankholder: campaign.bankholder
+      },
+      err: ''
+    });
+  } catch (e) { next(e); }
+});
+
+app.post('/campaign/:control/edit', requireAuth, async (req, res, next) => {
+  try {
+    const control = req.params.control;
+    const campaign = await db.findCampaignByControl(control);
+    if (!campaign) return res.status(404).render('404', { title: res.locals.t('err_404_title'), extraCss: ['error.css'] });
+    if (!await canManageCampaign(campaign, req.locals.user)) {
+      return res.status(403).render('403', { title: res.locals.t('err_forbidden'), extraCss: ['error.css'] });
+    }
+
+    const body = req.body;
+    const form = {
+      title: String(body.title || '').trim(),
+      description: String(body.description || '').trim(),
+      goalamount: parseFloat(body.goalamount),
+      bankname: String(body.bankname || '').trim(),
+      bankaccount: String(body.bankaccount || '').trim(),
+      bankholder: String(body.bankholder || '').trim(),
+      enddate: String(body.enddate || '')
+    };
+
+    let err = '';
+    if (!form.title || !form.description || !form.goalamount || !form.enddate) err = 'auth_required';
+    if (!err && (!form.bankname || !form.bankaccount || !form.bankholder)) err = 'create_bank_required';
+    if (!err && (form.goalamount <= 0)) err = 'err_amount';
+
+    const endTs = utils.parseDateInput(form.enddate);
+    if (!err && (isNaN(endTs.getTime()))) err = 'create_bad_date';
+    // keep the closing date in the future while the campaign is still open
+    if (!err && campaign.status === 0 && endTs <= Date.now()) err = 'create_bad_date';
+
+    const existingImages = await db.listCampaignImages(campaign.id);
+    const files = utils.toArray(req.files && req.files.images);
+    if (!err && files.length + existingImages.length > config.maxCampaignImages) err = 'err_upload_max';
+
+    if (err) {
+      return res.render('edit', {
+        title: res.locals.t('edit_title'),
+        extraCss: ['create.css'],
+        extraScripts: ['create.js'],
+        control,
+        campaign,
+        images: existingImages,
+        form,
+        err
+      });
+    }
+
+    try {
+      utils.validateImages(files);
+    } catch (e) {
+      return res.render('edit', {
+        title: res.locals.t('edit_title'),
+        extraCss: ['create.css'],
+        extraScripts: ['create.js'],
+        control,
+        campaign,
+        images: existingImages,
+        form,
+        err: e.code === 'UPLOAD_TYPE' ? 'err_upload_type' : 'err_upload_size'
+      });
+    }
+
+    await db.updateCampaign(campaign.id, {
+      title: form.title,
+      description: form.description,
+      goalamount: form.goalamount,
+      bankname: form.bankname,
+      bankaccount: form.bankaccount,
+      bankholder: form.bankholder,
+      enddate: endTs
+    });
+
+    if (files.length) {
+      const saved = await utils.saveImages(files, 'campaigns', control);
+      let sort = existingImages.length;
+      for (let i = 0; i < saved.length; i++) {
+        await db.addCampaignImage(campaign.id, saved[i], sort + i + 1);
+      }
+      if (!campaign.coverimg && saved.length) await db.setCover(campaign.id, saved[0]);
+    }
+
+    res.redirect('/campaign/' + control + '?updated=1');
+  } catch (e) {
+    if (e.code === 'UPLOAD_TYPE' || e.code === 'UPLOAD_SIZE') {
+      return res.render('edit', { title: res.locals.t('edit_title'), extraCss: ['create.css'], extraScripts: ['create.js'], control, campaign, images: [], form: req.body, err: e.code === 'UPLOAD_TYPE' ? 'err_upload_type' : 'err_upload_size' });
+    }
+    next(e);
+  }
+});
+
 app.get('/mycampaigns', requireAuth, async (req, res, next) => {
   try {
     const user = req.locals.user;
@@ -590,7 +718,7 @@ app.get('/campaign/:control/progress', requireAuth, async (req, res, next) => {
 app.post('/campaign/:control/progress', requireAuth, async (req, res, next) => {
   try {
     const control = req.params.control
-    const campaign = await db.findCampaignById(id);
+    const campaign = await db.findCampaignByControl(control);
     if (!campaign) return res.status(404).render('404', { title: res.locals.t('err_404_title'), extraCss: ['error.css'] });
     if (campaign.userid !== req.locals.user.userid && !req.locals.user.isadmin) {
       return res.status(403).render('403', { title: res.locals.t('err_forbidden'), extraCss: ['error.css'] });
@@ -601,7 +729,7 @@ app.post('/campaign/:control/progress', requireAuth, async (req, res, next) => {
     if (!title || !text) {
       return res.render('progress', { title: res.locals.t('prog_title'), extraCss: ['create.css'], extraScripts: ['create.js'], campaign, err: 'auth_required' });
     }
-    const post = await db.createProgress({ campaignid: id, title, text });
+    const post = await db.createProgress({ campaignid: id, title, description: text });
     const files = utils.toArray(req.files && req.files.images);
     try {
       utils.validateImages(files);

@@ -16,11 +16,14 @@
     <div class="progress-post target-card">
       <div class="progress-post-head">
         <h3><%= campaign.title %></h3>
-        <span class="badge badge-closed"><%= t('c_status_closed') %></span>
+        <% if (campaign.status === 0) { %><span class="badge badge-open"><%= t('c_status_open') %></span><% } %>
+        <% if (campaign.status === 1) { %><span class="badge badge-closed"><%= t('c_status_closed') %></span><% } %>
+        <% if (campaign.status === 2) { %><span class="badge badge-cancelled"><%= t('c_status_cancelled') %></span><% } %>
+        <% if (campaign.status === 4) { %><span class="badge badge-invalid"><%= t('c_status_invalid') %></span><% } %>
       </div>
     </div>
 
-    <form action="/campaign/<%= campaign.id %>/progress" method="post" enctype="multipart/form-data" class="card-form" id="progressForm" novalidate>
+    <form action="/campaign/<%= campaign.control %>/progress" method="post" enctype="multipart/form-data" class="card-form" id="progressForm" novalidate>
       <div class="field">
         <label for="title"><%= t('prog_p_title') %></label>
         <input type="text" id="title" name="title" placeholder="<%= t('prog_p_title_ph') %>" required>

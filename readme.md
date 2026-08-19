@@ -11,10 +11,11 @@ The application is bilingual (Spanish by default, English available). The langua
 - Two kinds of users: fundraisers (campaign organizers) and donors, plus administrators.
 - Fundraisers publish campaigns for a one-time posting fee of $5 deposited to the Charity bank account (no payment gateway yet).
 - Fundraisers can upload up to 10 images per campaign (JPG, PNG, WEBP, GIF, max 1 MB each).
+- Fundraisers can edit their campaign data (title, description, goal, closing date, bank details) and add more images at any time from My Campaigns.
 - Campaigns receive donations directly to the fundraiser bank account; the campaign page shows the organizer bank details.
 - Donors confirm their deposit by entering their bank name and the deposit confirmation number.
 - Donations may be anonymous, or donors can include their name.
-- Campaigns close automatically on a preset date; afterwards the fundraiser can post progress updates about the use of the funds, including images.
+- Campaigns close automatically on a preset date; the fundraiser can post progress updates about the use of the funds at any time, open or closed, including images.
 - Landing page shows 4 urgent campaigns, 10 recently opened campaigns and 10 recently completed campaigns (counts are configurable via `.env`).
 - Administrators manage the platform from a dashboard: latest campaigns, donations and users, deactivate inappropriate campaigns, and flag campaigns as urgent.
 - Light and dark themes (light is the default), fully responsive, minimalist professional design with SVG icons only.
@@ -99,7 +100,7 @@ views/                 EJS templates with .html extension
   campaigns.html       campaign listings with filters
   campaign.html        campaign detail, donation form, bank details, progress
   create.html          create campaign form (fee notice + uploads)
-  progress.html        post a progress update for a closed campaign
+  progress.html        post a progress update for a campaign (open or closed)
   mycampaigns.html     fundraiser management: donations, confirmations, close
   register.html        registration form
   login.html           login form
@@ -127,11 +128,11 @@ Database name: `charity`. All tables, columns, indexes and comments are in Engli
 ### Tables
 
 - `users` — id, userid (unique lowercase identifier), name, govid, address, email, phone, country, password (sha256 hex), token (login cookie token), isadmin, resettoken, resetexp, created, updated.
-- `campaigns` — id, userid (owner), title, description, goalamount, commission (reserved for the future, currently 0), bankname, bankaccount, bankholder (direct deposit details), enddate (preset closing date), status, urgent, coverimg, created, updated.
-- `campaignimages` — id, campaignid, img (relative path under uploads), sort, created.
+- `campaigns` — id, control (unique public identifier), userid (owner), title, description, goalamount, commission (reserved for the future, currently 0), bankname, bankaccount, bankholder (direct deposit details), enddate (preset closing date), status, urgent, coverimg, created, updated.
+- `campaignimages` — id, campaignid, image (relative path under uploads), sort, created.
 - `donations` — id, campaignid, userid (donor), amount, bankname, confirmation (deposit confirmation number), donorname, anonymous, status, created.
-- `progress` — id, campaignid, title, text, created. Progress posts published by the fundraiser after the campaign closes.
-- `progressimages` — id, progressid, img, sort, created.
+- `progress` — id, campaignid, title, description, created. Progress posts published by the fundraiser after the campaign closes.
+- `progressimages` — id, progressid, image, sort, created.
 
 ### Status codes
 
@@ -149,7 +150,7 @@ Public pages:
 | --- | --- |
 | `GET /` | Landing page with urgent, recent open and recent closed campaigns |
 | `GET /campaigns` | Campaign listings, filter with `?f=all|open|closed|urgent` |
-| `GET /campaign/:id` | Campaign detail: gallery, description, bank details, donations, progress |
+| `GET /campaign/:control` | Campaign detail: gallery, description, bank details, donations, progress |
 | `GET /register` / `POST /register` | Create an account |
 | `GET /login` / `POST /login` | Log in |
 | `GET /logout` | Log out |
@@ -163,10 +164,11 @@ Authenticated routes (fundraisers and donors):
 | --- | --- |
 | `GET /create` / `POST /create` | Create a campaign (multipart form, up to 10 images) |
 | `GET /mycampaigns` | Manage own campaigns and their donations |
-| `POST /campaign/:id/donate` | Record a donation (bank name + confirmation number) |
-| `POST /campaign/:id/close` | Close own campaign |
-| `GET /campaign/:id/progress` / `POST /campaign/:id/progress` | Post a progress update (closed campaigns) |
-| `POST /campaign/:id/donation/:did/status` | Confirm or cancel a donation (owner or admin) |
+| `GET /campaign/:control/edit` / `POST /campaign/:control/edit` | Edit own campaign data and add images (owner or admin) |
+| `POST /campaign/:control/donate` | Record a donation (bank name + confirmation number) |
+| `POST /campaign/:control/close` | Close own campaign |
+| `GET /campaign/:control/progress` / `POST /campaign/:control/progress` | Post a progress update (open or closed campaigns) |
+| `POST /campaign/:control/donation/:did/status` | Confirm or cancel a donation (owner or admin) |
 
 Admin routes (admins only):
 

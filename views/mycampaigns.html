@@ -29,13 +29,12 @@
             </div>
             <div class="manage-actions">
               <a href="/campaign/<%= c.control %>" class="btn btn-ghost btn-sm"><%= t('view') %></a>
+              <a href="/campaign/<%= c.control %>/edit" class="btn btn-ghost btn-sm"><%= t('edit') %></a>
+              <a href="/campaign/<%= c.control %>/progress" class="btn btn-outline btn-sm"><%= t('my_addprogress') %></a>
               <% if (c.status === 0) { %>
                 <form action="/campaign/<%= c.control %>/close" method="post" onsubmit="return confirm('<%= t('my_close_confirm') %>')">
                   <button type="submit" class="btn btn-outline btn-sm"><%= t('my_close') %></button>
                 </form>
-              <% } %>
-              <% if (c.status === 1) { %>
-                <a href="/campaign/<%= c.control %>/progress" class="btn btn-outline btn-sm"><%= t('my_addprogress') %></a>
               <% } %>
             </div>
           </div>

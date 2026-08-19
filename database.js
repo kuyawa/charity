@@ -118,6 +118,16 @@ class Database {
     return r.rows[0] || null;
   }
 
+  async updateCampaign(id, { title, description, goalamount, bankname, bankaccount, bankholder, enddate }) {
+    const r = await this.pool.query(
+      `UPDATE campaigns SET title = $1, description = $2, goalamount = $3, bankname = $4,
+       bankaccount = $5, bankholder = $6, enddate = $7, updated = NOW()
+       WHERE id = $8 RETURNING *`,
+      [title, description, goalamount, bankname || '', bankaccount || '', bankholder || '', enddate, id]
+    );
+    return r.rows[0] || null;
+  }
+
   async listCampaigns(filter, limit) {
     const base = `SELECT c.*, u.name AS ownername FROM campaigns c JOIN users u ON u.userid = c.userid`;
     let sql = base + ' ORDER BY c.created DESC';
@@ -305,10 +315,10 @@ class Database {
 
   // ---------- progress ----------
 
-  async createProgress({ campaignid, title, text }) {
+  async createProgress({ campaignid, title, description }) {
     const r = await this.pool.query(
-      'INSERT INTO progress (campaignid, title, text) VALUES ($1, $2, $3) RETURNING *',
-      [campaignid, title, text]
+      'INSERT INTO progress (campaignid, title, description) VALUES ($1, $2, $3) RETURNING *',
+      [campaignid, title, description]
     );
     return r.rows[0];
   }

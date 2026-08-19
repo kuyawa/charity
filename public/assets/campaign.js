@@ -60,9 +60,54 @@
     done();
   }
 
+  // progress image lightbox: click a thumbnail to expand, click or any key to close
+  function initImageModal() {
+    var modal = document.getElementById('imageModal');
+    var modalImg = document.getElementById('imageModalImg');
+    if (!modal || !modalImg) return;
+
+    function open(src) {
+      modalImg.src = src;
+      modal.hidden = false;
+      // force reflow so the fade/scale transition plays
+      void modal.offsetWidth;
+      modal.classList.add('open');
+      document.body.classList.add('modal-open');
+    }
+
+    function close() {
+      modal.classList.remove('open');
+      document.body.classList.remove('modal-open');
+      setTimeout(function () {
+        if (!modal.classList.contains('open')) {
+          modal.hidden = true;
+          modalImg.src = '';
+        }
+      }, 180);
+    }
+
+    document.querySelectorAll('.progress-img').forEach(function (thumb) {
+      thumb.addEventListener('click', function () {
+        open(thumb.getAttribute('data-src') || thumb.querySelector('img').src);
+      });
+    });
+
+    // close on any click inside the modal (backdrop, image or close button)
+    modal.addEventListener('click', close);
+
+    // close on any key
+    document.addEventListener('keydown', function (e) {
+      if (!modal.classList.contains('open')) return;
+      close();
+      // prevent the key from reaching the page (e.g. space scrolling)
+      e.preventDefault();
+    });
+  }
+
   document.addEventListener('DOMContentLoaded', function () {
     initGallery();
     initDonateToggle();
     initShare();
+    initImageModal();
   });
 })();
