@@ -265,6 +265,19 @@ body.modal-open { overflow: hidden; }
 .bank-list.inline div { border-bottom: none; padding-bottom: 0; flex-direction: column; gap: 2px; }
 .bank-list.inline dd { text-align: left; }
 
+/* payment method sections */
+.side-pay-title {
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+  border-top: 1px solid var(--border);
+  padding-top: 14px;
+  margin: 16px 0 4px;
+}
+.side-pay-title + .side-note { margin-top: 6px; }
+
 .donate-form-card { border-color: color-mix(in srgb, var(--accent) 40%, var(--border)); }
 
 @media (max-width: 960px) {

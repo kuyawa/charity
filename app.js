@@ -6,11 +6,15 @@ const fileUpload = require('express-fileupload');
 const config = require('./config');
 const utils = require('./utils');
 const package = require('./package.json');
-const appVersion = package.version.replaceAll('.','');
+//const appVersion = package.version.replaceAll('.','');
 
 const lang = require('./lang');
 const Database = require('./database');
 const db = new Database(config.databaseUrl);
+
+const ONEDAY   =  24 * 60 * 60 * 1000;
+const ONEMONTH =  30 * ONEDAY;
+const ONEYEAR  = 365 * ONEDAY;
 
 const app = express();
 app.engine('html', ejs.renderFile);
@@ -52,7 +56,7 @@ app.use((req, res, next) => {
   res.locals.appName = config.appName;
   res.locals.language = code;
   res.locals.lang = translations;
-  res.locals.version = appVersion;
+  //res.locals.version = appVersion;
   res.locals.money = (v) => utils.money(v, code);
   res.locals.fmtDate = (ts) => utils.fmtDate(ts, code);
   res.locals.fmtDateInput = (ts) => utils.fmtDateInput(ts);
@@ -217,7 +221,7 @@ app.post('/register', async (req, res, next) => {
     const user = await db.createUser({ ...form, password: utils.sha256(form.password) });
     const token = utils.randomToken();
     await db.setToken(user.id, token);
-    res.cookie(config.cookieName, token, { httpOnly: true, sameSite: 'lax', maxAge: 30 * 86000 });
+    res.cookie(config.cookieName, token, { httpOnly: true, sameSite: 'lax', maxAge: ONEMONTH });
     res.redirect('/');
   } catch (e) { next(e); }
 });
@@ -252,7 +256,7 @@ app.post('/login', async (req, res, next) => {
     console.log('OK')
     const token = utils.randomToken();
     await db.setToken(user.id, token);
-    res.cookie(config.cookieName, token, { httpOnly: true, sameSite: 'lax', maxAge: 30 * 86000 });
+    res.cookie(config.cookieName, token, { httpOnly: true, sameSite: 'lax', maxAge: ONEMONTH });
     res.redirect(nextPath.startsWith('/') && !nextPath.startsWith('//') ? nextPath : '/');
   } catch (e) { next(e); }
 });
@@ -332,8 +336,8 @@ app.post('/reset', async (req, res, next) => {
 // language switcher
 app.get('/lang/:code', (req, res) => {
   const code = req.params.code === 'en' ? 'en' : 'es';
-  res.cookie('lang', code, { maxAge: 365 * 86000, sameSite: 'lax' });
   const back = req.get('Referer') || '/';
+  res.cookie('lang', code, { maxAge: ONEYEAR, sameSite: 'lax' });
   res.redirect(back.startsWith('/') && !back.startsWith('//') ? back : '/');
 });
 
@@ -461,6 +465,12 @@ app.post('/create', requireAuth, async (req, res, next) => {
       bankname: String(body.bankname || '').trim(),
       bankaccount: String(body.bankaccount || '').trim(),
       bankholder: String(body.bankholder || '').trim(),
+      paypal: String(body.paypal || '').trim(),
+      zelle: String(body.zelle || '').trim(),
+      binance: String(body.binance || '').trim(),
+      cryptonet: String(body.cryptonet || '').trim(),
+      cryptocoin: String(body.cryptocoin || '').trim(),
+      cryptoaddr: String(body.cryptoaddr || '').trim(),
       enddate: String(body.enddate || '')
     };
     const confirmFee = body.fee === '1';
@@ -519,6 +529,12 @@ app.post('/create', requireAuth, async (req, res, next) => {
       bankname: form.bankname,
       bankaccount: form.bankaccount,
       bankholder: form.bankholder,
+      paypal: form.paypal || null,
+      zelle: form.zelle || null,
+      binance: form.binance || null,
+      cryptonet: form.cryptonet || null,
+      cryptocoin: form.cryptocoin || null,
+      cryptoaddr: form.cryptoaddr || null,
       enddate: endTs
     });
     try {
@@ -569,7 +585,13 @@ app.get('/campaign/:control/edit', requireAuth, async (req, res, next) => {
         enddate: utils.fmtDateInput(campaign.enddate),
         bankname: campaign.bankname,
         bankaccount: campaign.bankaccount,
-        bankholder: campaign.bankholder
+        bankholder: campaign.bankholder,
+        paypal: campaign.paypal,
+        zelle: campaign.zelle,
+        binance: campaign.binance,
+        cryptonet: campaign.cryptonet,
+        cryptocoin: campaign.cryptocoin,
+        cryptoaddr: campaign.cryptoaddr
       },
       err: ''
     });
@@ -593,6 +615,12 @@ app.post('/campaign/:control/edit', requireAuth, async (req, res, next) => {
       bankname: String(body.bankname || '').trim(),
       bankaccount: String(body.bankaccount || '').trim(),
       bankholder: String(body.bankholder || '').trim(),
+      paypal: String(body.paypal || '').trim(),
+      zelle: String(body.zelle || '').trim(),
+      binance: String(body.binance || '').trim(),
+      cryptonet: String(body.cryptonet || '').trim(),
+      cryptocoin: String(body.cryptocoin || '').trim(),
+      cryptoaddr: String(body.cryptoaddr || '').trim(),
       enddate: String(body.enddate || '')
     };
 
@@ -645,6 +673,12 @@ app.post('/campaign/:control/edit', requireAuth, async (req, res, next) => {
       bankname: form.bankname,
       bankaccount: form.bankaccount,
       bankholder: form.bankholder,
+      paypal: form.paypal || null,
+      zelle: form.zelle || null,
+      binance: form.binance || null,
+      cryptonet: form.cryptonet || null,
+      cryptocoin: form.cryptocoin || null,
+      cryptoaddr: form.cryptoaddr || null,
       enddate: endTs
     });
 

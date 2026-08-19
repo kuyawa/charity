@@ -90,7 +90,7 @@ async function saveImages(files, folder, control) {
     await file.mv(path.join(dir, name));
     saved.push(name);
   }
-  console.log('IMGS', saved)
+  //console.log('IMGS', saved)
   return saved;
 }
 

@@ -55,6 +55,7 @@
           <p class="field-hint"><%= t('create_c_end_note') %></p>
         </div>
       </div>
+      <h3 class="pay-head"><%= t('pay_bank') %></h3>
       <div class="field-row">
         <div class="field">
           <label for="bankname"><%= t('create_c_bankname') %></label>
@@ -68,6 +69,57 @@
       <div class="field">
         <label for="bankholder"><%= t('create_c_bankholder') %></label>
         <input type="text" id="bankholder" name="bankholder" value="<%= form.bankholder || '' %>" required>
+      </div>
+
+      <h3 class="pay-head"><%= t('pay_paypal') %></h3>
+      <div class="field">
+        <label for="paypal"><%= t('pay_paypal_email') %></label>
+        <input type="email" id="paypal" name="paypal" value="<%= form.paypal || '' %>" placeholder="<%= t('pay_paypal_ph') %>" autocomplete="off">
+      </div>
+
+      <h3 class="pay-head"><%= t('pay_zelle') %></h3>
+      <div class="field">
+        <label for="zelle"><%= t('pay_zelle_email') %></label>
+        <input type="email" id="zelle" name="zelle" value="<%= form.zelle || '' %>" placeholder="<%= t('pay_zelle_ph') %>" autocomplete="off">
+      </div>
+
+      <h3 class="pay-head"><%= t('pay_binance') %></h3>
+      <div class="field">
+        <label for="binance"><%= t('pay_binance_id') %></label>
+        <input type="text" id="binance" name="binance" value="<%= form.binance || '' %>" placeholder="<%= t('pay_binance_ph') %>" autocomplete="off">
+      </div>
+
+      <h3 class="pay-head"><%= t('pay_crypto') %></h3>
+      <div class="field-row">
+        <div class="field">
+          <label for="cryptonet"><%= t('pay_crypto_net') %></label>
+          <input type="text" id="cryptonet" name="cryptonet" value="<%= form.cryptonet || '' %>" placeholder="<%= t('pay_crypto_net_ph') %>" list="cryptoNetworks" autocomplete="off">
+          <datalist id="cryptoNetworks">
+            <option value="BEP-20">
+            <option value="ERC-20">
+            <option value="TRC-20">
+            <option value="Bitcoin">
+            <option value="Solana">
+          </datalist>
+        </div>
+        <div class="field">
+          <label for="cryptocoin"><%= t('pay_crypto_coin') %></label>
+          <input type="text" id="cryptocoin" name="cryptocoin" value="<%= form.cryptocoin || '' %>" placeholder="<%= t('pay_crypto_coin_ph') %>" list="cryptoCoins" autocomplete="off">
+          <datalist id="cryptoCoins">
+            <option value="BTC">
+            <option value="ETH">
+            <option value="USDT">
+            <option value="BNB">
+            <option value="USDC">
+            <option value="SOL">
+            <option value="TRX">
+            <option value="ADA">
+          </datalist>
+        </div>
+      </div>
+      <div class="field">
+        <label for="cryptoaddr"><%= t('pay_crypto_addr') %></label>
+        <input type="text" id="cryptoaddr" name="cryptoaddr" value="<%= form.cryptoaddr || '' %>" placeholder="<%= t('pay_crypto_addr_ph') %>" autocomplete="off">
       </div>
       <div class="field">
         <label for="images"><%= t('create_c_images') %></label>

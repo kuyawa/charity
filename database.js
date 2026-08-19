@@ -89,11 +89,11 @@ class Database {
 
   // ---------- campaigns ----------
 
-  async createCampaign({ control, userid, title, description, goalamount, commission, bankname, bankaccount, bankholder, enddate }) {
+  async createCampaign({ control, userid, title, description, goalamount, commission, bankname, bankaccount, bankholder, paypal, zelle, binance, cryptonet, cryptocoin, cryptoaddr, enddate }) {
     const r = await this.pool.query(
-      `INSERT INTO campaigns (control, userid, title, description, goalamount, commission, bankname, bankaccount, bankholder, enddate, status, urgent)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, 0, 0) RETURNING *`,
-      [control, userid, title, description, goalamount, commission, bankname || '', bankaccount || '', bankholder || '', enddate]
+      `INSERT INTO campaigns (control, userid, title, description, goalamount, commission, bankname, bankaccount, bankholder, paypal, zelle, binance, cryptonet, cryptocoin, cryptoaddr, enddate, status, urgent)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, 0, 0) RETURNING *`,
+      [control, userid, title, description, goalamount, commission, bankname || '', bankaccount || '', bankholder || '', paypal, zelle, binance, cryptonet, cryptocoin, cryptoaddr, enddate]
     );
     return r.rows[0];
   }
@@ -118,12 +118,13 @@ class Database {
     return r.rows[0] || null;
   }
 
-  async updateCampaign(id, { title, description, goalamount, bankname, bankaccount, bankholder, enddate }) {
+  async updateCampaign(id, { title, description, goalamount, bankname, bankaccount, bankholder, paypal, zelle, binance, cryptonet, cryptocoin, cryptoaddr, enddate }) {
     const r = await this.pool.query(
       `UPDATE campaigns SET title = $1, description = $2, goalamount = $3, bankname = $4,
-       bankaccount = $5, bankholder = $6, enddate = $7, updated = NOW()
-       WHERE id = $8 RETURNING *`,
-      [title, description, goalamount, bankname || '', bankaccount || '', bankholder || '', enddate, id]
+       bankaccount = $5, bankholder = $6, paypal = $7, zelle = $8, binance = $9,
+       cryptonet = $10, cryptocoin = $11, cryptoaddr = $12, enddate = $13, updated = NOW()
+       WHERE id = $14 RETURNING *`,
+      [title, description, goalamount, bankname || '', bankaccount || '', bankholder || '', paypal, zelle, binance, cryptonet, cryptocoin, cryptoaddr, enddate, id]
     );
     return r.rows[0] || null;
   }

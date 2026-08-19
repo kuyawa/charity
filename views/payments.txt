@@ -1,0 +1,13 @@
+add the following fields to campaigns table:
+
+- paypal:     varchar 40 for paypal email, null
+- zelle:      varchar 40 for zelle email, null
+- binance:    varchar 40 for binance id, null
+- cryptonet:  varchar 40 for crypto network, null
+- cryptocoin: varchar 10 for crypto symbol, null
+- cryptoaddr: varchar 128 for crypto address, null
+
+add the fields to the create, edit and campaign views, updating the database on submit, ingnoring if not provided by the fundraiser
+organize payment methods as: bank account, paypal, zelle, binance, crypto
+separate them visually in the form by a bold header with the payment type and a top border for every header
+we already have bank account so continue with paypal and the rest

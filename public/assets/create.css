@@ -34,6 +34,18 @@
 .fee-box h3 { font-size: 1.05rem; margin-bottom: 6px; }
 .fee-box p { color: var(--muted); font-size: 0.92rem; margin-bottom: 12px; }
 
+/* payment method sections */
+.pay-head {
+  font-weight: 700;
+  font-size: 0.95rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+  border-top: 1px solid var(--border);
+  padding-top: 18px;
+  margin: 28px 0 16px;
+}
+
 .image-previews {
   display: flex;
   gap: 10px;
