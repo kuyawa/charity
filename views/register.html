@@ -38,7 +38,12 @@
         </div>
         <div class="field">
           <label for="country"><%= t('auth_country') %></label>
-          <input type="text" id="country" name="country" value="<%= form.country || '' %>" maxlength="2" placeholder="US, MX, CO...">
+          <select id="country" name="country">
+            <option value="" <%= !form.country ? 'selected' : '' %>><%= t('auth_country_ph') %></option>
+            <% (countries || []).forEach(function (c) { %>
+              <option value="<%= c.code %>" <%= form.country === c.code ? 'selected' : '' %>><%= c.name %></option>
+            <% }); %>
+          </select>
         </div>
       </div>
       <div class="field-row">

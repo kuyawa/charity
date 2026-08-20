@@ -17,12 +17,13 @@ module.exports = {
   acctHolder: 'Example Foundation',
   acctNumber: 'CH-000-0001',
   allowedExts: ['.jpg', '.jpeg', '.png', '.webp', '.gif'],
+  commission: 5, // 5%
   cookieName: 'charity_session',
   cookieSecret: process.env.COOKIE_SECRET || '0E572AFB-2D9D-4BCE-BE45-A317A7FB9185',
   databaseUrl: process.env.DATABASE_URL,
   maxCampaignImages: 10,
   port: parseInt(process.env.PORT || '3000', 10),
-  postFee: 5, // 5%
+  postFee: 9,
   recentClosedLimit: 8,
   recentOpenLimit: 8,
   uploadLimitMB: 2, // 2 mb max

@@ -257,7 +257,7 @@ body.modal-open { overflow: hidden; }
 .side-card .btn-block { margin-bottom: 10px; }
 
 .bank-list { display: flex; flex-direction: column; gap: 10px; margin-top: 6px; }
-.bank-list div { display: flex; justify-content: space-between; gap: 12px; border-bottom: 1px dashed var(--border); padding-bottom: 8px; }
+.bank-list div { display: flex; justify-content: space-between; gap: 12px; /*border-bottom: 1px dashed var(--border); padding-bottom: 8px;*/ }
 .bank-list div:last-child { border-bottom: none; padding-bottom: 0; }
 .bank-list dt { color: var(--muted); font-size: 0.86rem; }
 .bank-list dd { font-weight: 600; font-size: 0.92rem; text-align: right; word-break: break-word; }
@@ -277,6 +277,7 @@ body.modal-open { overflow: hidden; }
   margin: 16px 0 4px;
 }
 .side-pay-title + .side-note { margin-top: 6px; }
+.side-pay-title i { font-weight: normal; text-transform: initial; }
 
 .donate-form-card { border-color: color-mix(in srgb, var(--accent) 40%, var(--border)); }
 

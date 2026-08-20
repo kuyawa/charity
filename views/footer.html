@@ -16,10 +16,17 @@
       <a href="/register"><%= t('nav_register') %></a>
     </div>
     <div class="footer-col">
+      <h4><%= t('footer_legal') %></h4>
+      <a href="/privacy"><%= t('privacy_title') %></a>
+      <a href="/terms"><%= t('terms_title') %></a>
+    </div>
+<!-- 
+    <div class="footer-col">
       <h4><%= t('footer_lang') %></h4>
       <a href="/lang/es" lang="es"><%= t('lang_es') %></a>
       <a href="/lang/en" lang="en"><%= t('lang_en') %></a>
     </div>
+ -->
   </div>
   <div class="container footer-bottom">
     <span>&copy; <%= currentYear %> <%=appName%> • <%= t('footer_rights') %></span>

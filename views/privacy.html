@@ -1,0 +1,118 @@
+<%- include('header.html') %>
+
+<section class="legal-wrap">
+  <div class="container container-narrow">
+    <div class="legal-head">
+      <h1 class="legal-title"><%= t('privacy_title') %></h1>
+      <p class="legal-sub"><%= t('privacy_sub') %></p>
+<!-- 
+      <div class="legal-lang" role="group" aria-label="<%= t('footer_lang') %>">
+        <a href="/lang/es" class="btn btn-ghost btn-sm <%= language === 'es' ? 'active' : '' %>" lang="es"><%= t('lang_es') %></a>
+        <a href="/lang/en" class="btn btn-ghost btn-sm <%= language === 'en' ? 'active' : '' %>" lang="en"><%= t('lang_en') %></a>
+      </div>
+ -->
+    </div>
+
+    <!-- Spanish -->
+    <div class="content <%= language === 'es' ? 'active' : '' %>" lang="es">
+      <div class="legal-card">
+        <p class="legal-updated">Última actualización: <%= currentYear %></p>
+
+        <h2>1. Introducción</h2>
+        <p>En <%= appName %> ("la Plataforma") nos tomamos en serio tu privacidad. Esta Política de Privacidad explica qué información recopilamos, cómo la usamos y qué opciones tienes sobre ella al utilizar nuestros servicios.</p>
+
+        <h2>2. Información que recopilamos</h2>
+        <h3>2.1 Información de registro</h3>
+        <p>Cuando creas una cuenta, recopilamos tu nombre completo, nombre de usuario, documento de identidad, dirección, correo electrónico, teléfono y país.</p>
+        <h3>2.2 Información de campañas</h3>
+        <p>Cuando publicas una campaña, recopilamos el título, la descripción, la meta de recaudación, la fecha de cierre, los datos de tu cuenta bancaria, tus métodos de pago opcionales y las imágenes que subas.</p>
+        <h3>2.3 Información de donaciones</h3>
+        <p>Cuando realizas una donación, recopilamos el monto, el banco de origen, el número de confirmación y, si no eliges donar de forma anónima, tu nombre.</p>
+        <h3>2.4 Datos técnicos</h3>
+        <p>Usamos cookies para mantener tu sesión iniciada y recordar tu preferencia de idioma. También registramos datos básicos de uso para el funcionamiento y la seguridad de la Plataforma.</p>
+
+        <h2>3. Cómo usamos tu información</h2>
+        <ul>
+          <li>Para operar la Plataforma y permitir la creación de campañas y donaciones.</li>
+          <li>Para mostrar públicamente tu campaña: título, descripción, imágenes, progreso y tu nombre de usuario.</li>
+          <li>Para que los organizadores puedan ver y verificar las donaciones de sus campañas (monto, banco, número de confirmación y nombre del donante, salvo que la donación sea anónima).</li>
+          <li>Para la seguridad, la prevención del fraude y el cumplimiento de nuestras obligaciones legales.</li>
+          <li>Para mejorar la Plataforma y brindar soporte.</li>
+        </ul>
+
+        <h2>4. Divulgación de información</h2>
+        <p>No vendemos ni alquilamos tus datos personales a terceros. La información que compartes públicamente en tus campañas es visible para todos los visitantes. Los organizadores solo ven los datos de las donaciones recibidas en sus propias campañas; si donas de forma anónima, tu nombre no se muestra.</p>
+
+        <h2>5. Retención de datos</h2>
+        <p>Conservamos tus datos mientras tu cuenta esté activa y durante el tiempo necesario para cumplir fines legales, contables o de seguridad. Si cierras tu cuenta, eliminaremos o anonimizaremos tus datos personales, excepto cuando la ley exija conservarlos.</p>
+
+        <h2>6. Tus derechos</h2>
+        <p>Tienes derecho a acceder, corregir o solicitar la eliminación de tus datos personales. Para ejercer estos derechos, contáctanos a través de los canales indicados al final de esta política.</p>
+
+        <h2>7. Cookies</h2>
+        <p>Utilizamos cookies estrictamente necesarias para la sesión y para recordar tu preferencia de idioma. Puedes deshabilitarlas desde tu navegador, aunque algunas funciones de la Plataforma podrían dejar de funcionar.</p>
+
+        <h2>8. Seguridad</h2>
+        <p>Aplicamos medidas técnicas y organizativas razonables para proteger tu información contra accesos no autorizados, pérdidas o alteraciones. Sin embargo, ningún sistema es completamente seguro, por lo que no podemos garantizar una seguridad absoluta.</p>
+
+        <h2>9. Cambios a esta política</h2>
+        <p>Podemos actualizar esta Política de Privacidad periódicamente. Publicaremos los cambios en esta página con la fecha de la última actualización. El uso continuado de la Plataforma después de los cambios implica su aceptación.</p>
+
+        <h2>10. Contacto</h2>
+        <p>Si tienes preguntas sobre esta política o sobre el manejo de tus datos, contáctanos a través de los canales de contacto disponibles en la Plataforma.</p>
+      </div>
+    </div>
+
+    <!-- English -->
+    <div class="content <%= language === 'en' ? 'active' : '' %>" lang="en">
+      <div class="legal-card">
+        <p class="legal-updated">Last updated: <%= currentYear %></p>
+
+        <h2>1. Introduction</h2>
+        <p>At <%= appName %> ("the Platform") we take your privacy seriously. This Privacy Policy explains what information we collect, how we use it and what choices you have about it when you use our services.</p>
+
+        <h2>2. Information we collect</h2>
+        <h3>2.1 Registration information</h3>
+        <p>When you create an account, we collect your full name, username, government ID, address, email address, phone number and country.</p>
+        <h3>2.2 Campaign information</h3>
+        <p>When you publish a campaign, we collect the title, description, fundraising goal, closing date, your bank account details, your optional payment methods and the images you upload.</p>
+        <h3>2.3 Donation information</h3>
+        <p>When you make a donation, we collect the amount, the bank you deposited from, the confirmation number and, unless you choose to donate anonymously, your name.</p>
+        <h3>2.4 Technical data</h3>
+        <p>We use cookies to keep you logged in and to remember your language preference. We also record basic usage data for the operation and security of the Platform.</p>
+
+        <h2>3. How we use your information</h2>
+        <ul>
+          <li>To operate the Platform and allow campaigns and donations to be created.</li>
+          <li>To publicly display your campaign: title, description, images, progress and your username.</li>
+          <li>To let organizers view and verify the donations received on their own campaigns (amount, bank, confirmation number and donor name, unless the donation is anonymous).</li>
+          <li>For security, fraud prevention and compliance with our legal obligations.</li>
+          <li>To improve the Platform and provide support.</li>
+        </ul>
+
+        <h2>4. Disclosure of information</h2>
+        <p>We do not sell or rent your personal data to third parties. Information you share publicly in your campaigns is visible to all visitors. Organizers only see the data of donations received on their own campaigns; if you donate anonymously, your name is not shown.</p>
+
+        <h2>5. Data retention</h2>
+        <p>We keep your data while your account is active and for as long as necessary to meet legal, accounting or security purposes. If you close your account, we will delete or anonymize your personal data, except when the law requires us to keep it.</p>
+
+        <h2>6. Your rights</h2>
+        <p>You have the right to access, correct or request the deletion of your personal data. To exercise these rights, contact us through the channels listed at the end of this policy.</p>
+
+        <h2>7. Cookies</h2>
+        <p>We use strictly necessary cookies for your session and to remember your language preference. You can disable them in your browser, although some Platform features may stop working.</p>
+
+        <h2>8. Security</h2>
+        <p>We apply reasonable technical and organizational measures to protect your information against unauthorized access, loss or alteration. However, no system is completely secure, so we cannot guarantee absolute security.</p>
+
+        <h2>9. Changes to this policy</h2>
+        <p>We may update this Privacy Policy from time to time. We will publish the changes on this page with the date of the last update. Continued use of the Platform after the changes implies acceptance of them.</p>
+
+        <h2>10. Contact</h2>
+        <p>If you have questions about this policy or about how your data is handled, contact us through the contact channels available on the Platform.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<%- include('footer.html') %>

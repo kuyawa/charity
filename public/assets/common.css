@@ -318,7 +318,7 @@ img { max-width: 100%; display: block; }
   transition: border-color 0.15s ease, box-shadow 0.15s ease;
 }
 .field textarea { resize: vertical; min-height: 120px; }
-.field input:focus, .field textarea:focus {
+.field input:focus, .field textarea:focus, .field select:focus {
   outline: none;
   border-color: var(--accent);
   box-shadow: 0 0 0 3px var(--accent-soft);

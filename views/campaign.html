@@ -241,21 +241,21 @@ function getAvatarChars(name, anon=false){
           </dl>
 
           <% if (campaign.paypal) { %>
-            <h4 class="side-pay-title"><%= t('pay_paypal') %></h4>
+            <h4 class="side-pay-title"><%= t('pay_paypal') %> <i>(<%= t('pay_currency_usd') %>)</i></h4>
             <dl class="bank-list">
               <div><dt><%= t('pay_paypal_email') %></dt><dd><%= campaign.paypal %></dd></div>
             </dl>
           <% } %>
 
           <% if (campaign.zelle) { %>
-            <h4 class="side-pay-title"><%= t('pay_zelle') %></h4>
+            <h4 class="side-pay-title"><%= t('pay_zelle') %> <i>(<%= t('pay_currency_usd') %>)</i></h4>
             <dl class="bank-list">
               <div><dt><%= t('pay_zelle_email') %></dt><dd><%= campaign.zelle %></dd></div>
             </dl>
           <% } %>
 
           <% if (campaign.binance) { %>
-            <h4 class="side-pay-title"><%= t('pay_binance') %></h4>
+            <h4 class="side-pay-title"><%= t('pay_binance') %> <i>(<%= t('pay_currency_usd') %>)</i></h4>
             <dl class="bank-list">
               <div><dt><%= t('pay_binance_id') %></dt><dd><%= campaign.binance %></dd></div>
             </dl>

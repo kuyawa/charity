@@ -60,7 +60,8 @@ app.use((req, res, next) => {
   res.locals.money = (v) => utils.money(v, code);
   res.locals.fmtDate = (ts) => utils.fmtDate(ts, code);
   res.locals.fmtDateInput = (ts) => utils.fmtDateInput(ts);
-  res.locals.getCountry = (c) => utils.getCountry(c);
+  res.locals.getCountry = (c) => utils.getCountry(c, code);
+  res.locals.countries = utils.getCountries(code);
   res.locals.t = (key) => translations[key] || lang.es[key] || key;
   res.locals.path = req.path;
   res.locals.query = req.query;
@@ -194,7 +195,7 @@ app.post('/register', async (req, res, next) => {
       address: String(body.address || '').trim(),
       email: String(body.email || '').trim().toLowerCase(),
       phone: String(body.phone || '').trim(),
-      country: String(body.country || '').trim(),
+      country: String(body.country || '').trim().toUpperCase(),
       password: String(body.password || ''),
       confirm: String(body.confirm || '')
     };
@@ -339,6 +340,21 @@ app.get('/lang/:code', (req, res) => {
   const back = req.get('Referer') || '/';
   res.cookie('lang', code, { maxAge: ONEYEAR, sameSite: 'lax' });
   res.redirect(back.startsWith('/') && !back.startsWith('//') ? back : '/');
+});
+
+// legal pages (bilingual content shown via .content.active based on selected language)
+app.get('/privacy', (req, res) => {
+  res.render('privacy', {
+    title: res.locals.t('privacy_title'),
+    extraCss: ['legal.css']
+  });
+});
+
+app.get('/terms', (req, res) => {
+  res.render('terms', {
+    title: res.locals.t('terms_title'),
+    extraCss: ['legal.css']
+  });
 });
 
 

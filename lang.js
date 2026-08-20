@@ -16,7 +16,7 @@ const lang = {
     nav_register: 'Registrarse',
     nav_logout: 'Salir',
     nav_hello: 'Hola',
-    footer_about: config.appName +' es una plataforma para crear campañas de donación y apoyar causas que transforman vidas',
+    footer_about: `${config.appName} es una plataforma para crear campañas de donación y apoyar causas que transforman vidas`,
     footer_links: 'Enlaces',
     footer_legal: 'Términos y privacidad',
     footer_contact: 'Contacto',
@@ -26,6 +26,12 @@ const lang = {
     lang_en: 'English',
     theme_light: 'Modo claro',
     theme_dark: 'Modo oscuro',
+
+    // legal
+    privacy_title: 'Política de privacidad',
+    privacy_sub: 'Cómo manejamos tus datos personales',
+    terms_title: 'Términos y condiciones',
+    terms_sub: 'Las reglas que rigen el uso de la plataforma',
 
     // hero / landing
     hero_title: 'Sé parte del cambio',
@@ -51,7 +57,7 @@ const lang = {
     card_urgent: 'Urgente',
     how_title: '¿Cómo funciona?',
     how_step1_title: 'Crea tu campaña',
-    how_step1_text: 'Regístrate, describe tu causa y publica tu campaña por una tarifa única de $5',
+    how_step1_text: `Regístrate, describe tu causa y publica tu campaña por una tarifa única de $${config.postFee}`,
     how_step2_title: 'Recibe donaciones',
     how_step2_text: 'Comparte tu campaña. Los donantes depositan directamente a tu cuenta bancaria',
     how_step3_title: 'Informa el progreso',
@@ -121,10 +127,10 @@ const lang = {
 
     // create campaign
     create_title: 'Crea tu campaña de donación',
-    create_subtitle: 'Publica tu causa por una tarifa única de $5 depositada a la cuenta de '+config.appName,
+    create_subtitle: `Publica tu causa por una tarifa única de $${config.postFee} depositada a la cuenta de ${config.appName}`,
     create_fee_title: 'Tarifa de publicación',
-    create_fee_text: 'El costo para publicar una campaña es de $5. Depósitalo a la cuenta de '+config.appName+' y tu campaña se publicará de inmediato',
-    create_bank_title: 'Cuenta de '+config.appName,
+    create_fee_text: `El costo para publicar una campaña es de $${config.postFee}. Depósitalo a la cuenta de ${config.appName} y tu campaña se publicará de inmediato`,
+    create_bank_title: `Cuenta de ${config.appName}`,
     create_c_title: 'Título de la campaña',
     create_c_title_ph: 'Nombre corto y claro de tu causa',
     create_c_desc: 'Descripción',
@@ -140,7 +146,7 @@ const lang = {
     create_c_submit: 'Publicar campaña',
     create_success: '¡Tu campaña fue publicada!',
     create_fee_missing: 'Debes confirmar que depositaste la tarifa de publicación',
-    create_confirm_fee: 'Confirmo que deposité la tarifa de $5 a la cuenta de '+config.appName,
+    create_confirm_fee: `Confirmo que deposité la tarifa de $${config.postFee} a la cuenta de ${config.appName}`,
 
     // payment methods
     c_pay_title: 'Métodos de pago',
@@ -161,6 +167,7 @@ const lang = {
     pay_crypto_net_ph: 'Ej: BEP-20, ERC-20, TRC-20',
     pay_crypto_coin_ph: 'Ej: USDT, BTC, ETH',
     pay_crypto_addr_ph: 'Dirección de tu billetera',
+    pay_currency_usd: 'Pago en USD',
 
     // edit campaign
     edit: 'Editar',
@@ -199,7 +206,7 @@ const lang = {
     auth_register_title: 'Crear cuenta',
     auth_register_sub: 'Regístrate para crear campañas o donar',
     auth_login_title: 'Iniciar sesión',
-    auth_login_sub: 'Accede a tu cuenta de '+config.appName,
+    auth_login_sub: `Accede a tu cuenta de ${config.appName}`,
     auth_name: 'Nombre completo',
     auth_userid: 'Nombre de usuario',
     auth_userid_hint: 'Identificador único en minúsculas, sin espacios',
@@ -208,6 +215,7 @@ const lang = {
     auth_email: 'Correo electrónico',
     auth_phone: 'Teléfono',
     auth_country: 'País',
+    auth_country_ph: 'Selecciona tu país',
     auth_password: 'Contraseña',
     auth_confirm: 'Confirmar contraseña',
     auth_submit: 'Registrarse',
@@ -283,7 +291,7 @@ const lang = {
     err_upload_type: 'Solo se permiten imágenes JPG, PNG, WEBP o GIF',
     err_upload_size: 'Cada imagen debe pesar menos de 1 MB',
     err_upload_max: 'Máximo 10 imágenes por campaña',
-    err_fee: 'La tarifa de publicación es de $5',
+    err_fee: `La tarifa de publicación es de $${config.postFee}`,
     err_amount: 'El monto debe ser mayor que cero',
     err_server: 'Ocurrió un error. Intenta nuevamente',
     err_campaign_closed: 'Esta campaña no acepta donaciones',
@@ -316,7 +324,7 @@ const lang = {
     nav_register: 'Sign up',
     nav_logout: 'Log out',
     nav_hello: 'Hello',
-    footer_about: config.appName+' is a platform to create donation campaigns and support causes that transform lives',
+    footer_about: `${config.appName} is a platform to create donation campaigns and support causes that transform lives`,
     footer_links: 'Links',
     footer_legal: 'Terms and privacy',
     footer_contact: 'Contact',
@@ -326,6 +334,12 @@ const lang = {
     lang_en: 'English',
     theme_light: 'Light mode',
     theme_dark: 'Dark mode',
+
+    // legal
+    privacy_title: 'Privacy policy',
+    privacy_sub: 'How we handle your personal data',
+    terms_title: 'Terms and conditions',
+    terms_sub: 'The rules that govern the use of the platform',
 
     // hero / landing
     hero_title: 'Be part of the change',
@@ -351,7 +365,7 @@ const lang = {
     card_urgent: 'Urgent',
     how_title: 'How it works',
     how_step1_title: 'Create your campaign',
-    how_step1_text: 'Sign up, describe your cause and publish your campaign for a one-time fee of $5',
+    how_step1_text: `Sign up, describe your cause and publish your campaign for a one-time fee of $${config.postFee}`,
     how_step2_title: 'Receive donations',
     how_step2_text: 'Share your campaign. Donors deposit directly to your bank account',
     how_step3_title: 'Report progress',
@@ -421,10 +435,10 @@ const lang = {
 
     // create campaign
     create_title: 'Create your donation campaign',
-    create_subtitle: 'Publish your cause for a one-time fee of $5 deposited to the '+config.appName+' account',
+    create_subtitle: `Publish your cause for a one-time fee of $${config.postFee} deposited to the ${config.appName} account`,
     create_fee_title: 'Publication fee',
-    create_fee_text: 'The cost to publish a campaign is $5. Deposit it to the '+config.appName+' account and your campaign will be published right away',
-    create_bank_title: config.appName+' account',
+    create_fee_text: `The cost to publish a campaign is $${config.postFee}. Deposit it to the ${config.appName} account and your campaign will be published right away`,
+    create_bank_title: `${config.appName} account`,
     create_c_title: 'Campaign title',
     create_c_title_ph: 'Short, clear name for your cause',
     create_c_desc: 'Description',
@@ -440,7 +454,7 @@ const lang = {
     create_c_submit: 'Publish campaign',
     create_success: 'Your campaign was published!',
     create_fee_missing: 'You must confirm that you deposited the publication fee',
-    create_confirm_fee: 'I confirm that I deposited the $5 fee to the '+config.appName+' account',
+    create_confirm_fee: `I confirm that I deposited the $${config.postFee} fee to the ${config.appName} account`,
 
     // payment methods
     c_pay_title: 'Payment methods',
@@ -461,6 +475,7 @@ const lang = {
     pay_crypto_net_ph: 'e.g. BEP-20, ERC-20, TRC-20',
     pay_crypto_coin_ph: 'e.g. USDT, BTC, ETH',
     pay_crypto_addr_ph: 'Your wallet address',
+    pay_currency_usd: 'Pay in USD',
 
     // edit campaign
     edit: 'Edit',
@@ -499,7 +514,7 @@ const lang = {
     auth_register_title: 'Create account',
     auth_register_sub: 'Sign up to create campaigns or donate',
     auth_login_title: 'Log in',
-    auth_login_sub: 'Access your '+config.appName+' account',
+    auth_login_sub: `Access your ${config.appName} account`,
     auth_name: 'Full name',
     auth_userid: 'Username',
     auth_userid_hint: 'Unique identifier in lowercase, no spaces',
@@ -508,6 +523,7 @@ const lang = {
     auth_email: 'Email',
     auth_phone: 'Phone',
     auth_country: 'Country',
+    auth_country_ph: 'Select your country',
     auth_password: 'Password',
     auth_confirm: 'Confirm password',
     auth_submit: 'Sign up',
@@ -583,7 +599,7 @@ const lang = {
     err_upload_type: 'Only JPG, PNG, WEBP or GIF images are allowed',
     err_upload_size: 'Each image must be smaller than 1 MB',
     err_upload_max: 'Maximum 10 images per campaign',
-    err_fee: 'The publication fee is $5',
+    err_fee: 'The publication fee is $${config.postFee}',
     err_amount: 'The amount must be greater than zero',
     err_server: 'Something went wrong. Please try again',
     err_campaign_closed: 'This campaign is not accepting donations',

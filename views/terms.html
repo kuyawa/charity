@@ -1,0 +1,150 @@
+<%- include('header.html') %>
+
+<section class="legal-wrap">
+  <div class="container container-narrow">
+    <div class="legal-head">
+      <h1 class="legal-title"><%= t('terms_title') %></h1>
+      <p class="legal-sub"><%= t('terms_sub') %></p>
+<!-- 
+      <div class="legal-lang" role="group" aria-label="<%= t('footer_lang') %>">
+        <a href="/lang/es" class="btn btn-ghost btn-sm <%= language === 'es' ? 'active' : '' %>" lang="es"><%= t('lang_es') %></a>
+        <a href="/lang/en" class="btn btn-ghost btn-sm <%= language === 'en' ? 'active' : '' %>" lang="en"><%= t('lang_en') %></a>
+      </div>
+ -->
+    </div>
+
+    <!-- Spanish -->
+    <div class="content <%= language === 'es' ? 'active' : '' %>" lang="es">
+      <div class="legal-card">
+        <p class="legal-updated">Última actualización: <%= currentYear %></p>
+
+        <h2>1. Aceptación de los términos</h2>
+        <p>Al acceder o utilizar <%= appName %> ("la Plataforma"), aceptas estos Términos y Condiciones. Si no estás de acuerdo con ellos, no utilices la Plataforma.</p>
+
+        <h2>2. Descripción del servicio</h2>
+        <p>La Plataforma permite a los usuarios crear campañas de donación y a los donantes apoyar esas causas. Los aportes se realizan mediante depósitos directos a la cuenta bancaria del organizador; la Plataforma no maneja ni administra los fondos de las campañas.</p>
+
+        <h2>3. Cuentas de usuario</h2>
+        <ul>
+          <li>Debes proporcionar información veraz y mantenerla actualizada al registrarte.</li>
+          <li>Eres responsable de mantener la confidencialidad de tu contraseña y de todas las actividades realizadas con tu cuenta.</li>
+          <li>Debes ser mayor de edad (o contar con el consentimiento de tus padres o tutores) para usar la Plataforma.</li>
+          <li>La Plataforma puede suspender o eliminar cuentas que violen estos términos.</li>
+        </ul>
+
+        <h2>4. Publicación de campañas</h2>
+        <ul>
+          <li>La publicación de una campaña tiene una tarifa única de $<%= postFee %>, depositada a la cuenta de la Plataforma.</li>
+          <li>El organizador debe proporcionar sus datos bancarios válidos para recibir las donaciones.</li>
+          <li>El organizador es el único responsable del contenido de su campaña, de la veracidad de la información y del uso de los fondos recibidos.</li>
+          <li>La Plataforma se reserva el derecho de rechazar, pausar o desactivar cualquier campaña que considere fraudulenta, ilegal o contraria a estos términos.</li>
+          <li>Las campañas se cierran automáticamente en la fecha indicada o cuando el organizador decide cerrarlas.</li>
+        </ul>
+
+        <h2>5. Donaciones</h2>
+        <ul>
+          <li>Los donantes realizan sus aportes directamente a la cuenta bancaria del organizador.</li>
+          <li>Al donar, confirmas el monto, el banco y el número de confirmación de tu depósito para que el organizador pueda verificarlo.</li>
+          <li>Puedes donar de forma anónima dejando el nombre vacío.</li>
+          <li>El organizador confirma las donaciones una vez verificado el depósito en su cuenta.</li>
+          <li>Si una campaña es cancelada, el reembolso de los aportes depende exclusivamente del organizador; la Plataforma no puede garantizar la devolución de fondos que no administra.</li>
+        </ul>
+
+        <h2>6. Conducta prohibida</h2>
+        <p>Queda prohibido utilizar la Plataforma para fines ilegales o fraudulentos, suplantar a otras personas, publicar contenido falso, discriminatorio, ofensivo o que infrinja derechos de terceros, y cualquier intento de vulnerar la seguridad de la Plataforma.</p>
+
+        <h2>7. Tarifas</h2>
+        <p>La única tarifa cobrada por la Plataforma es la de publicación de campañas, de $<%= postFee %> por campaña. No se cobran comisiones sobre las donaciones.</p>
+
+        <h2>8. Cierre de campañas y uso de fondos</h2>
+        <p>Al finalizar una campaña, el organizador debe publicar actualizaciones con fotos y detalles sobre cómo se usaron los fondos. La Plataforma puede solicitar pruebas del uso de los fondos en caso de denuncias.</p>
+
+        <h2>9. Propiedad intelectual</h2>
+        <p>El contenido que publicas en tus campañas te pertenece, pero nos otorgas una licencia limitada para mostrarlo en la Plataforma. La marca, el diseño y los elementos visuales de la Plataforma son propiedad de <%= appName %> y no pueden usarse sin autorización.</p>
+
+        <h2>10. Limitación de responsabilidad</h2>
+        <p>La Plataforma actúa únicamente como intermediaria tecnológica. No es responsable de los depósitos no realizados, del incumplimiento de los organizadores ni del uso indebido de los fondos. El uso de la Plataforma es bajo tu propia responsabilidad y se proporciona "tal cual".</p>
+
+        <h2>11. Terminación</h2>
+        <p>Podemos suspender o terminar tu acceso a la Plataforma si violas estos términos, sin perjuicio de las demás acciones legales que correspondan.</p>
+
+        <h2>12. Modificaciones</h2>
+        <p>Podemos modificar estos términos en cualquier momento. Los cambios se publicarán en esta página y entrarán en vigencia al ser publicados. El uso continuado de la Plataforma implica la aceptación de los términos modificados.</p>
+
+        <h2>13. Ley aplicable</h2>
+        <p>Estos términos se rigen por las leyes aplicables en la jurisdicción de operación de la Plataforma, y cualquier controversia será sometida a los tribunales competentes. Los usuarios están sujetos a regirse por las leyes locales y pueden ser sometidos a la justicia de su país en caso de infringirlas. La plataforma no se responsabiliza por infracciones cometidas por los usuarios.</p>
+
+        <h2>14. Contacto</h2>
+        <p>Si tienes preguntas sobre estos términos, contáctanos a través de los canales de contacto disponibles en la Plataforma.</p>
+      </div>
+    </div>
+
+    <!-- English -->
+    <div class="content <%= language === 'en' ? 'active' : '' %>" lang="en">
+      <div class="legal-card">
+        <p class="legal-updated">Last updated: <%= currentYear %></p>
+
+        <h2>1. Acceptance of the terms</h2>
+        <p>By accessing or using <%= appName %> ("the Platform"), you agree to these Terms and Conditions. If you do not agree with them, do not use the Platform.</p>
+
+        <h2>2. Description of the service</h2>
+        <p>The Platform allows users to create donation campaigns and donors to support those causes. Contributions are made through direct deposits to the organizer's bank account; the Platform does not handle or manage campaign funds.</p>
+
+        <h2>3. User accounts</h2>
+        <ul>
+          <li>You must provide truthful information and keep it up to date when registering.</li>
+          <li>You are responsible for keeping your password confidential and for all activities carried out with your account.</li>
+          <li>You must be of legal age (or have the consent of your parents or guardians) to use the Platform.</li>
+          <li>The Platform may suspend or remove accounts that violate these terms.</li>
+        </ul>
+
+        <h2>4. Publishing campaigns</h2>
+        <ul>
+          <li>Publishing a campaign has a one-time fee of $<%= postFee %>, deposited to the Platform's account.</li>
+          <li>The organizer must provide valid bank details to receive donations.</li>
+          <li>The organizer is solely responsible for the content of their campaign, the accuracy of the information and the use of the funds received.</li>
+          <li>The Platform reserves the right to reject, pause or deactivate any campaign it considers fraudulent, illegal or contrary to these terms.</li>
+          <li>Campaigns close automatically on the stated date or when the organizer decides to close them.</li>
+        </ul>
+
+        <h2>5. Donations</h2>
+        <ul>
+          <li>Donors make their contributions directly to the organizer's bank account.</li>
+          <li>When donating, you confirm the amount, bank and confirmation number of your deposit so the organizer can verify it.</li>
+          <li>You can donate anonymously by leaving the name empty.</li>
+          <li>The organizer confirms donations once the deposit is verified in their account.</li>
+          <li>If a campaign is cancelled, the refund of contributions depends solely on the organizer; the Platform cannot guarantee the return of funds it does not manage.</li>
+        </ul>
+
+        <h2>6. Prohibited conduct</h2>
+        <p>It is forbidden to use the Platform for illegal or fraudulent purposes, impersonate other people, publish false, discriminatory, offensive content or content that infringes third-party rights, and any attempt to breach the security of the Platform.</p>
+
+        <h2>7. Fees</h2>
+        <p>The only fee charged by the Platform is the campaign publication fee of $<%= postFee %> per campaign. No commissions are charged on donations.</p>
+
+        <h2>8. Campaign closure and use of funds</h2>
+        <p>When a campaign ends, the organizer must post updates with photos and details about how the funds were used. The Platform may request proof of the use of funds in case of complaints.</p>
+
+        <h2>9. Intellectual property</h2>
+        <p>The content you publish in your campaigns belongs to you, but you grant us a limited license to display it on the Platform. The brand, design and visual elements of the Platform are owned by <%= appName %> and may not be used without authorization.</p>
+
+        <h2>10. Limitation of liability</h2>
+        <p>The Platform acts only as a technological intermediary. It is not responsible for deposits not made, for organizers' breach of obligations or for the misuse of funds. Use of the Platform is at your own risk and it is provided "as is".</p>
+
+        <h2>11. Termination</h2>
+        <p>We may suspend or terminate your access to the Platform if you violate these terms, without prejudice to any other legal actions that may apply.</p>
+
+        <h2>12. Modifications</h2>
+        <p>We may modify these terms at any time. Changes will be published on this page and take effect upon publication. Continued use of the Platform implies acceptance of the modified terms.</p>
+
+        <h2>13. Governing law</h2>
+        <p>These terms are governed by the laws applicable in the Platform's jurisdiction of operation, and any dispute will be submitted to the competent courts. Users are subject to local laws and may be prosecuted in their country for any violations. The Platform is not responsible for violations committed by users.</p>
+
+        <h2>14. Contact</h2>
+        <p>If you have questions about these terms, contact us through the contact channels available on the Platform.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<%- include('footer.html') %>

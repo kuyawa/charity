@@ -94,22 +94,98 @@ async function saveImages(files, folder, control) {
   return saved;
 }
 
-function getCountry(c){
-  const country = c.toUpperCase()
-  return {
+// Countries of the Americas with localized names (Spanish + English).
+// Codes are stored in the database; names are shown in the user's language.
+const COUNTRIES = {
+  es: {
+    AG: 'Antigua y Barbuda',
     AR: 'Argentina',
-    BR: 'Brasil',
+    BS: 'Bahamas',
+    BB: 'Barbados',
+    BZ: 'Belice',
     BO: 'Bolivia',
-    CH: 'Chile',
+    BR: 'Brasil',
+    CA: 'Canadá',
+    CL: 'Chile',
     CO: 'Colombia',
+    CR: 'Costa Rica',
+    CU: 'Cuba',
+    DM: 'Dominica',
+    DO: 'República Dominicana',
     EC: 'Ecuador',
+    SV: 'El Salvador',
+    GD: 'Granada',
+    GT: 'Guatemala',
+    GY: 'Guyana',
+    HT: 'Haití',
+    HN: 'Honduras',
+    JM: 'Jamaica',
     MX: 'México',
-    PA: 'Paraguay',
+    NI: 'Nicaragua',
+    PA: 'Panamá',
+    PY: 'Paraguay',
     PE: 'Perú',
-    UR: 'Uruguay',
-    US: 'United States',
+    KN: 'San Cristóbal y Nieves',
+    LC: 'Santa Lucía',
+    VC: 'San Vicente y las Granadinas',
+    SR: 'Surinam',
+    TT: 'Trinidad y Tobago',
+    US: 'Estados Unidos',
+    UY: 'Uruguay',
     VE: 'Venezuela'
-  }[country] || ''
+  },
+  en: {
+    AG: 'Antigua and Barbuda',
+    AR: 'Argentina',
+    BS: 'Bahamas',
+    BB: 'Barbados',
+    BZ: 'Belize',
+    BO: 'Bolivia',
+    BR: 'Brazil',
+    CA: 'Canada',
+    CL: 'Chile',
+    CO: 'Colombia',
+    CR: 'Costa Rica',
+    CU: 'Cuba',
+    DM: 'Dominica',
+    DO: 'Dominican Republic',
+    EC: 'Ecuador',
+    SV: 'El Salvador',
+    GD: 'Grenada',
+    GT: 'Guatemala',
+    GY: 'Guyana',
+    HT: 'Haiti',
+    HN: 'Honduras',
+    JM: 'Jamaica',
+    MX: 'Mexico',
+    NI: 'Nicaragua',
+    PA: 'Panama',
+    PY: 'Paraguay',
+    PE: 'Peru',
+    KN: 'Saint Kitts and Nevis',
+    LC: 'Saint Lucia',
+    VC: 'Saint Vincent and the Grenadines',
+    SR: 'Suriname',
+    TT: 'Trinidad and Tobago',
+    US: 'United States',
+    UY: 'Uruguay',
+    VE: 'Venezuela'
+  }
+};
+
+function getCountry(ctr, lng) {
+  const language = String(lng || 'es').toLowerCase();
+  const country = String(ctr || '').toUpperCase();
+  return (COUNTRIES[language] || COUNTRIES.es)[country] || '';
+}
+
+// full localized country list (code + name), sorted by localized name
+function getCountries(lng) {
+  const language = String(lng || 'es').toLowerCase();
+  const table = COUNTRIES[language] || COUNTRIES.es;
+  return Object.keys(table)
+    .map((code) => ({ code, name: table[code] }))
+    .sort((a, b) => a.name.localeCompare(b.name, language === 'es' ? 'es' : 'en'));
 }
 
 module.exports = {
@@ -117,6 +193,7 @@ module.exports = {
   escapeRegex,
   fmtDate,
   fmtDateInput,
+  getCountries,
   getCountry,
   money,
   parseDateInput,
